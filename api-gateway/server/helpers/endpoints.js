@@ -1,10 +1,15 @@
+let allowedCountries = "pt,es,fr,be,nl,de,ch,it,tr,gr,pl,cz,at,us,ca"
+
+
 function getEndointWithInput(city) {
-    return `https://nominatim.openstreetmap.org/search.php?city=${city}&format=json`
+    let endpoint = `https://nominatim.openstreetmap.org/search.php?q=${city}&format=json&countrycodes=${allowedCountries}`
+    return encodeURI(endpoint)
 }
 
 
 function getEndointWithInputForCountry(country) {
-    return `https://nominatim.openstreetmap.org/search.php?q=${country}&format=json`
+    let endpoint = `https://nominatim.openstreetmap.org/search.php?q=${country}&format=json&countrycodes=${allowedCountries}`
+    return encodeURI(endpoint)
 }
 
 module.exports = {getEndointWithInput,getEndointWithInputForCountry}
