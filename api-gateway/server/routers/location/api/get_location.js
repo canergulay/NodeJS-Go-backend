@@ -1,4 +1,4 @@
-const searchByQuery= require('../datasource/search_location')
+const getParsedLocations= require('../repositary/location_repositary')
 
  async function getLocation (req,res) {
 
@@ -10,8 +10,9 @@ const searchByQuery= require('../datasource/search_location')
     res.status(404).send('emptyquery')
         return
     }
-    let result = await searchByQuery(searchTerm)
-    res.send(result.data)
+    let result = await getParsedLocations(searchTerm)
+    console.log(result)
+    res.send(result)
 }
 
 

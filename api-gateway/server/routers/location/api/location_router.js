@@ -6,7 +6,7 @@ const router = express.Router()
 var apiSuffix = '/location'
 
 
-router.get(apiSuffix,getLocation)
+router.post(apiSuffix,getLocation)
 
 
 module.exports = router

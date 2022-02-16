@@ -8,7 +8,7 @@ const endpoints = require('../../../helpers/endpoints')
         let result = await axios.get(endPoint)
         return result
     }catch(e){
-        return e
+        throw e
     }
 
 }
