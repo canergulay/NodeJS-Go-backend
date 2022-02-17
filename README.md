@@ -3,3 +3,4 @@
 - Indeed I wanted to write everything in Go as a monolith to practise what I learnt at that side, but then I noticed that I need to be a little bit quicker. Node.JS is apparently offers a faster development experience when it comes to build API's.
 - That's why I will use Node.JS as main API gateway and will be using Go for a few services.
 - I didn't use Go for Websocket server before. So yeah, I will utilise Go for realtime chat functionality to broaden my competence on Go.
+- I think I can utilise gRPC for the communication pipeline between pi-gateway (NodeJS) and some other services in Go.
