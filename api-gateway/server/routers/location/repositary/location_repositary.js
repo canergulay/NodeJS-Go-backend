@@ -4,8 +4,14 @@ const searchByQuery = require('../datasource/search_location')
 async function getParsedLocations(query) {
     try {
         let results = await searchByQuery(query) 
+
+        if(results.data.length==0) return []
+        
         let resultsParsed = results.data.map(result =>  parseResult(result));
-        if(resultsParsed[0].firstName.split(", ").length==1) return resultsParsed[0] // IF IT IS RESPRESENTING A COUNTRY, RETURN DIRECTLY THE FIRST RESULT
+        console.log(resultsParsed)
+
+        if(resultsParsed[0].firstName.split(", ").length==1) return [resultsParsed[0]] // IF IT IS RESPRESENTING A COUNTRY, RETURN DIRECTLY THE FIRST RESULT
+        if(resultsParsed.length==1) return resultsParsed
         return resultsParsed // IF IT IS NOT A COUNTRY, RETURN ALL THE PARSED RESULTS
     }catch(e){
         return e
