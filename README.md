@@ -4,3 +4,4 @@
 - That's why I will use Node.JS as main API gateway and will be using Go for a few services.
 - I didn't use Go for Websocket server before. So yeah, I will utilise Go for realtime chat functionality to broaden my competence on Go.
 - I think I can utilise gRPC for the communication pipeline between pi-gateway (NodeJS) and some other services in Go.
+- I will also build FCM (notification service) in Go.
