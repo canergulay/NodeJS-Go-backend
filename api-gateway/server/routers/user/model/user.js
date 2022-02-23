@@ -1,4 +1,4 @@
-const jwt_manager = require('../../../helpers/jwt_manager');
+const jwt_manager = require('../../../utils/jwt_manager');
 
 const mongoose = require('mongoose')
 
@@ -11,6 +11,10 @@ const userSchema = mongoose.Schema({
         type: String,
         required:true,
         unique: true 
+    },
+    picture:{
+      type: String,
+      default:'avatar.jpg'
     },
     phone:{
       type: String,
@@ -31,12 +35,23 @@ const userSchema = mongoose.Schema({
 
 
 
-
 userSchema.methods.generateToken = async function(){
   const user = this
   const token = jwt_manager.generateToken({id:user._id},'30d')
   user.tokens = user.tokens.concat(token)
-  return await user.save()
+  return (await user.save()).clearify()
+}
+
+userSchema.methods.clearify = function(){
+  const user = this
+  return {
+    'id':user.id,
+    'username':user.username,
+    'email':user.email,
+    'phone':user.phone,
+    'picture':user.picture,
+    'tokens':user.tokens
+  }
 }
 
 

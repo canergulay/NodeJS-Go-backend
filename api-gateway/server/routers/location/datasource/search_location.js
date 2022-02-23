@@ -1,5 +1,5 @@
 const axios = require('axios')
-const endpoints = require('../../../helpers/endpoints')
+const endpoints = require('../../../utils/endpoints')
 
 
  async function searchByQuery(queryTerm) {
