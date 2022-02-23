@@ -1,4 +1,4 @@
-const getLocation = require('./get_location.js')
+const getLocation = require('./api/get_location')
 
 const express = require('express')
 const router = express.Router()

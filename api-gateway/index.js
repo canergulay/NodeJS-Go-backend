@@ -1,4 +1,6 @@
+require('dotenv').config()
 const app = require('./server/app')
+require('./config/mongodb/connection')
 
 let port = 3000
 
