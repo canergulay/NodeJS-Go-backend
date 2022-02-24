@@ -22,7 +22,9 @@ module.exports = registerUserRepositary
 
 
  function inputCheck(userObject) {
-    userObject.phone = userObject.phone.split(" ").join("") 
+    if(userObject.phone != null){
+        userObject.phone = userObject.phone.split(" ").join("")
+    }
     userObject.password = hasher.hashGivenValue(userObject.password)
     return userObject
 }

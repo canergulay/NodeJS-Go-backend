@@ -1,5 +1,5 @@
 const searchByQuery = require('../datasource/search_location')
-
+const responseWrapper = require('../../../utils/response_wrapper');
 
 async function getParsedLocations(query) {
     try {
@@ -10,11 +10,11 @@ async function getParsedLocations(query) {
         let resultsParsed = results.data.map(result =>  parseResult(result));
         console.log(resultsParsed)
 
-        if(resultsParsed[0].firstName.split(", ").length==1) return [resultsParsed[0]] // IF IT IS RESPRESENTING A COUNTRY, RETURN DIRECTLY THE FIRST RESULT
-        if(resultsParsed.length==1) return resultsParsed
-        return resultsParsed // IF IT IS NOT A COUNTRY, RETURN ALL THE PARSED RESULTS
+        if(resultsParsed[0].firstName.split(", ").length==1) return responseWrapper(0,[resultsParsed[0]])  // IF IT IS RESPRESENTING A COUNTRY, RETURN DIRECTLY THE FIRST RESULT
+        if(resultsParsed.length==1) return responseWrapper(0,resultsParsed) 
+        return responseWrapper(0,resultsParsed)  // IF IT IS NOT A COUNTRY, RETURN ALL THE PARSED RESULTS
     }catch(e){
-        return e
+         return responseWrapper(1,e) 
     }
 }
 
