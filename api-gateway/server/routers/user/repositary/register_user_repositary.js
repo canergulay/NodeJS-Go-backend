@@ -5,6 +5,7 @@ const response = require('../../../utils/response_wrapper')
 
 async function registerUserRepositary(body) {
     try {
+        // CHECK USER BEFORE REGISTRATION.
         let bodyChecked =  inputCheck(body)
         let user = await registerUserDS(bodyChecked)
         let userWithToken = await User(user).generateToken()

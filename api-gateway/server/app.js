@@ -1,5 +1,6 @@
 const locationRouter = require('./routers/location/location_router')
 const userRouter = require('./routers/user/user_router')
+const advertRouter = require('./routers/advert/advert_router')
 
 
 const express = require('express')
@@ -15,6 +16,7 @@ app.use(express.text());
 
 app.use(userRouter)
 app.use(locationRouter)
+app.use(advertRouter)
 
 
 module.exports = app

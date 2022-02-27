@@ -9,20 +9,19 @@ async function loginUser(mail,phone,password) {
     let user = await loginUserDS(mail,phone)
 
     if(user==null){
-        return response(5,userWithToken)
+        return response(5,{})
     }
 
     let isPasswordsMatch = Hasher.compareGivenHashAndValue(user.password,password)
     let userWithToken = await user.generateToken()
     if(isPasswordsMatch){
-        return response(1,userWithToken)
+        return response(0,userWithToken)
     }else{
         return response(4,userWithToken)
     }
 
     }catch(e){
         return response(1,e)
-
     }
 }
 

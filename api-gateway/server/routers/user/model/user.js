@@ -9,8 +9,6 @@ const userSchema = mongoose.Schema({
     },
     email:{
         type: String,
-        unique:true,
-        sparse:true
     },
     picture:{
       type: String,
@@ -18,8 +16,6 @@ const userSchema = mongoose.Schema({
     },
     phone:{
       type: String,
-      unique:true,
-      sparse:true
     },
     password:{
         type: String,

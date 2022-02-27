@@ -5,7 +5,9 @@ async function loginUser(req,res){
     let mail = req.body.mail
     let password = req.body.password
     let phone = req.body.phone
-      return await loginUserRepositary.loginUser(mail,phone,password)
+    let response = await loginUserRepositary.loginUser(mail,phone,password)
+    console.log(response)
+       res.send(response)
 }
 
 
