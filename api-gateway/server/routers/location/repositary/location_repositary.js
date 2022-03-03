@@ -21,8 +21,10 @@ async function getParsedLocations(query) {
 function parseResult(result){
     let id = result.place_id
     let type = result.type
+    let lat = result.lat
+    let lon = result.lon
     let names = parseByDisplayName(type,result.display_name)
-    return {"id":id,"type":type,"firstName":names.firstName,"upperName":names.upperName}
+    return {"id":id,"type":type,"firstName":names.firstName,"upperName":names.upperName,"lat":lat,"lon":lon}
 }
 
 
