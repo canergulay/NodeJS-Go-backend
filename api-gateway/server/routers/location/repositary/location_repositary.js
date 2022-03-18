@@ -1,9 +1,9 @@
-const searchByQuery = require('../datasource/search_location')
+const locationDataSource = require('../datasource/search_location')
 const responseWrapper = require('../../../utils/response_wrapper');
 
 async function getParsedLocations(query) {
     try {
-        let results = await searchByQuery(query) 
+        let results = await locationDataSource.searchByQuery(query) 
 
         if(results.data.length==0) return []
         
@@ -17,6 +17,7 @@ async function getParsedLocations(query) {
          return responseWrapper(1,e) 
     }
 }
+
 
 function parseResult(result){
     let id = result.place_id

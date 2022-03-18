@@ -17,4 +17,5 @@ const getParsedLocations= require('../repositary/location_repositary')
 
 
 
+
 module.exports = getLocation

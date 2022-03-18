@@ -13,4 +13,11 @@ const endpoints = require('../../../utils/endpoints')
 
 }
 
-module.exports = searchByQuery
+ function getBoundariesByLatLng(lat,lon){
+    let endpoint = endpoints.getEndointForBoundriesByGivenLatLng(lat,lon)
+    let result =  axios.get(endpoint)
+    return result
+}
+
+
+module.exports = {searchByQuery,getBoundariesByLatLng}

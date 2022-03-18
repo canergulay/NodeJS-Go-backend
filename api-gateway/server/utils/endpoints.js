@@ -12,4 +12,10 @@ function getEndointWithInputForCountry(country) {
     return encodeURI(endpoint)
 }
 
-module.exports = {getEndointWithInput,getEndointWithInputForCountry}
+function getEndointForBoundriesByGivenLatLng(lat,lon) {
+    let endpoint = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&countrycodes=${allowedCountries}`
+    return encodeURI(endpoint)
+}
+
+
+module.exports = {getEndointWithInput,getEndointWithInputForCountry,getEndointForBoundriesByGivenLatLng}

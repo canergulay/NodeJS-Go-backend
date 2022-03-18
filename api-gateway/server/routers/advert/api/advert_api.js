@@ -7,4 +7,10 @@ async function saveAdvertAPI(req,res){
     res.send(result)
 }
 
-module.exports = {saveAdvertAPI}
+ async function getAdvertsAPI(req,res){
+    let lat = req.query.lat
+    let lon = req.query.lon
+   res.send(await AdvertRepositary.getAdvertsByLatLonRepositary(lat,lon))
+}
+
+module.exports = {saveAdvertAPI,getAdvertsAPI}

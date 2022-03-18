@@ -1,10 +1,20 @@
 const Advert = require('../model/advert')
 const rawMongoDBoperations = require('../../../../config/mongodb/raw_operations')
 const searchLocationsDS = require('../../location/datasource/search_location')
+
 async function saveAdvert(advert){
-        advert.location.coordinates = [Number(advert.location.lat),Number(advert.location.lon)] 
+        advert.loc = {
+                type:'Point',
+                coordinates:[Number(advert.location.lat),Number(advert.location.lon)] 
+        }
+     
         let myAdvert = new Advert(advert)
         return await myAdvert.save()        
+}
+
+function getAdvertsByBoundaries(boundaries,type){
+        console.log(boundaries)
+        return Advert.find().where('loc').within({ box: [[Number(boundaries[0]), Number(boundaries[2]) ,], [Number(boundaries[1]), Number(boundaries[3])]]})
 }
 
 
@@ -40,4 +50,4 @@ async function operate(element,advert){
         rawMongoDBoperations.checkIfCollectionExistsAndInsert(advert,location.data[0].place_id.toString(),location.data[0].display_name)
 } 
 
-module.exports = {saveAdvert,populateAdvertToUpperLocations}
+module.exports = {saveAdvert,populateAdvertToUpperLocations,getAdvertsByBoundaries}

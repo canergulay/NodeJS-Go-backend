@@ -25,26 +25,17 @@ const advertSchema = mongoose.Schema({
     advertOther:{
         type:String
     },
-    location:{
-        id:{
+    locationId:{
+        type:{
             type:Number,
         },
-        firstName:{
-            type:String,
-        },
-        upperName:{
-            type:String,
-        },
-        lat:{
-            type:String
-        },
-        lon:{
-            type:String
-        },
-        coordinates:[{type:Number}]
+    },
+    loc:{
+        type: { type: String },
+        coordinates: [Number],
     },
     pointPinned:{
-       
+        coordinates: [Number],
     },
     rent:{
         type:Number
