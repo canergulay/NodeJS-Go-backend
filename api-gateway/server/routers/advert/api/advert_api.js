@@ -3,6 +3,7 @@ const AdvertRepositary = require('../repositary/advert_repositary')
 
 async function saveAdvertAPI(req,res){
     let advert = req.body
+    console.log(advert)
     let result = await AdvertRepositary.saveAdvertRepositary(advert)
     res.send(result)
 }

@@ -5,7 +5,8 @@ const advertSchema = mongoose.Schema({
         type:Number
     },
     category: {
-        type:mongoose.Schema.Types.ObjectId
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Category'
     },
     genderMixType:{
         type:Number
@@ -38,6 +39,9 @@ const advertSchema = mongoose.Schema({
         coordinates: [Number],
     },
     rent:{
+        type:Number
+    },
+    area:{
         type:Number
     },
     currency:{
