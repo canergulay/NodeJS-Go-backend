@@ -1,4 +1,4 @@
-const getParsedLocations= require('../repositary/location_repositary')
+const getParsedLocationsRepositary= require('../repositary/location_repositary')
 
  async function getLocation (req,res) {
 
@@ -10,7 +10,7 @@ const getParsedLocations= require('../repositary/location_repositary')
     res.status(404).send('emptyquery')
         return
     }
-    let result = await getParsedLocations(searchTerm)
+    let result = await getParsedLocationsRepositary.getParsedLocations(searchTerm)
     console.log(result)
     res.send(result)
 }

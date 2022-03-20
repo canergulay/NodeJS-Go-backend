@@ -19,5 +19,10 @@ const endpoints = require('../../../utils/endpoints')
     return result
 }
 
+function getMapBoxReverseDecode(lat,lon){
+    let endpoint = endpoints.MapBoxReverseGeocodingURL(lat,lon)
+    let result = axios.get(endpoint)
+    return result
+}
 
-module.exports = {searchByQuery,getBoundariesByLatLng}
+module.exports = {searchByQuery,getBoundariesByLatLng,getMapBoxReverseDecode}
