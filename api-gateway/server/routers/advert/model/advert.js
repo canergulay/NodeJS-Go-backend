@@ -4,6 +4,10 @@ const advertSchema = mongoose.Schema({
     type:{
         type:Number
     },
+    owner:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    },
     category: {
         type:mongoose.Schema.Types.ObjectId,
         ref:'Category'
@@ -35,8 +39,10 @@ const advertSchema = mongoose.Schema({
         type: { type: String },
         coordinates: [Number],
     },
-    pointPinned:{
-        coordinates: [Number],
+    address:{
+        place:{type:String},
+        fullAdress:{type:String},
+        coordinates:[Number]
     },
     rent:{
         type:Number

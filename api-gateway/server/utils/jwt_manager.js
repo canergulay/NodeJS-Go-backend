@@ -8,8 +8,8 @@ function generateToken(payload,expiresIn) {
     });
 }
 
-function checkToken(){
-
+function verifyToken(token){
+    return jwt.verify(token, process.env.SECRETKEY)
 }
 
-module.exports = {generateToken,checkToken}
+module.exports = {generateToken,verifyToken}

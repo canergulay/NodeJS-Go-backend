@@ -3,10 +3,6 @@ const rawMongoDBoperations = require("../../../../config/mongodb/raw_operations"
 const searchLocationsDS = require("../../location/datasource/search_location");
 
 async function saveAdvert(advert) {
-  advert.loc = {
-    type: "Point",
-    coordinates: [Number(advert.location.lat), Number(advert.location.lon)],
-  };
 
   let myAdvert = new Advert(advert);
   return await myAdvert.save();
