@@ -1,59 +1,60 @@
-const jwt_manager = require('../../../utils/jwt_manager');
+const jwt_manager = require("../../../utils/jwt_manager");
 
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const userSchema = mongoose.Schema({
-    username:{
-        type:String,
-        required:true,
-    },
-    email:{
-        type: String,
-    },
-    picture:{
+const userSchema = mongoose.Schema(
+  {
+    username: {
       type: String,
-      default:'avatar.jpg'
+      required: true,
     },
-    phone:{
+    email: {
       type: String,
     },
-    password:{
-        type: String,
-        required:true, 
+    picture: {
+      type: String,
+      default: "avatar.jpg",
     },
-    rmethod:{
+    phone: {
+      type: String,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    rmethod: {
       type: Number,
-      required:true 
+      required: true,
     },
-    tokens:[String]
-},{timestamps:true})
+    tokens: [String],
+  },
+  { timestamps: true }
+)
 
-
-
-
-userSchema.methods.generateToken = async function(){
-  const user = this
-  const token = jwt_manager.generateToken({id:user._id},'30d')
-  user.tokens = user.tokens.concat(token)
-  return (await user.save()).clearify()
+userSchema.methods.generateToken = async function () {
+  const user = this;
+  const token = jwt_manager.generateToken({ id: user._id }, "30d");
+  user.tokens = user.tokens.concat(token);
+  return (await user.save()).clearify();
 }
 
-userSchema.methods.clearify = function(){
-  const user = this
+userSchema.methods.clearify = function () {
+  const user = this;
   return {
-    'id':user.id,
-    'username':user.username,
-    'email':user.email,
-    'phone':user.phone,
-    'picture':user.picture,
-    'tokens':user.tokens
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    phone: user.phone,
+    picture: user.picture,
+    tokens: user.tokens,
   }
 }
 
+userSchema.methods.getPurifiedUserInfo = () => {
+  const user = this;
+  return JSON.stringify(user, ["id", "username", "email", "phone", "picture"]);
+}
 
+const User = mongoose.model("User", userSchema);
 
-
-
-const User = mongoose.model('User',userSchema)
-
-module.exports = User
+module.exports = User;
