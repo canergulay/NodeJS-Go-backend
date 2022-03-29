@@ -5,7 +5,3 @@ type ChatMessage struct {
 	Receiver string
 	Message  string
 }
-
-type SocketPool struct {
-	Clients map[string]Client
-}

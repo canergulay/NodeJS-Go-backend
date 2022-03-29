@@ -6,6 +6,10 @@ var (
 	clientNotFound = "client not found already"
 )
 
+type SocketPool struct {
+	Clients map[string]Client
+}
+
 func InitializeSocketPool() SocketPool {
 	clients := make(map[string]Client)
 	return SocketPool{Clients: clients}
