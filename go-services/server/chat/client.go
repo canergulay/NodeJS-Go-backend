@@ -74,6 +74,7 @@ func (c Client) handleError(err error){
 			websocket.CloseNoStatusReceived:
 			fmt.Printf("User with the id %s is leaving.",c.Id)
 			c.ReceiveMessage<-CLOSED_CONNECTION
+			SP.RemoveClientFromPool(c.Id)
 		}
 	}
 }
