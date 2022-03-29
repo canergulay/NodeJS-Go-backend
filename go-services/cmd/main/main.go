@@ -4,11 +4,11 @@ import (
 	"log"
 	"net/http"
 
-	chat "github.com/canergulay/goservices/server/chat/websocket"
+	"github.com/canergulay/goservices/server/chat"
 )
 
 func main() {
 
-	http.HandleFunc("/echo", chat.WebsocketHandler)
+	http.HandleFunc("/", chat.WebsocketHandler)
 	log.Fatal(http.ListenAndServe("localhost:8080",nil))
 }
