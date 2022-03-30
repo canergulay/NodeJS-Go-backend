@@ -11,7 +11,7 @@ var (
 	port = ":8081"
 )
 
-func ConnectGRPCServer() *ValidationClient {
+func ConnectGRPCServer() ValidationClient {
 
 	conn, err := grpc.Dial(port, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -19,5 +19,6 @@ func ConnectGRPCServer() *ValidationClient {
 	}
 
 	validationClient := NewValidationClient(conn)
-	return &validationClient
+
+	return validationClient
 }

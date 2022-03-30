@@ -31,11 +31,14 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	if readError != nil {
 		fmt.Println("unexpected read error")
 	}
-
-	clientCreated := HandleFirstMessageAndInitialiseClient(connection, p)
-	SP.AddClientToPool(clientCreated)
-
-	go clientCreated.ReceiveMessageHandler(connection)
-	go clientCreated.SendMessageHandler(connection)
+	clientCreated, err := HandleFirstMessageAndInitialiseClient(connection, p)
+	if err == nil && clientCreated != nil {
+		SP.AddClientToPool(*clientCreated)
+		go clientCreated.ReceiveMessageHandler(connection)
+		go clientCreated.SendMessageHandler(connection)
+		fmt.Printf("USER WITH ID %s HAS SUCCESSFULLY AUTHENTICATED HIMSELF WITH HIS JWT", clientCreated.Id)
+	} else {
+		connection.Close() // OUR USER COULDN'T VERIFY HIS IDENTITY WITH A VALID JWT THAT HOLDS HIS USERID
+	}
 
 }

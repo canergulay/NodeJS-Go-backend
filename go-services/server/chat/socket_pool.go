@@ -1,18 +1,24 @@
 package chat
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/canergulay/goservices/grpc_manager"
+)
 
 var (
 	clientNotFound = "client not found already"
 )
 
 type SocketPool struct {
-	Clients map[string]Client
+	Clients          map[string]Client
+	ValidationClient grpc_manager.ValidationClient
 }
 
 func InitializeSocketPool() SocketPool {
 	clients := make(map[string]Client)
-	return SocketPool{Clients: clients}
+	validationClient := grpc_manager.ConnectGRPCServer()
+	return SocketPool{Clients: clients, ValidationClient: validationClient}
 }
 
 func (sp SocketPool) AddClientToPool(client Client) {
@@ -20,7 +26,7 @@ func (sp SocketPool) AddClientToPool(client Client) {
 }
 
 func (sp SocketPool) RemoveClientFromPool(id string) error {
-	
+
 	Client, ok := sp.Clients[id]
 
 	if !ok {
@@ -34,10 +40,9 @@ func (sp SocketPool) RemoveClientFromPool(id string) error {
 	return nil
 }
 
-
-func (sp SocketPool) SendMessageToUser(id string,message string) error {
+func (sp SocketPool) SendMessageToUser(id string, message string) error {
 	Client, ok := sp.Clients[id]
-	
+
 	if !ok {
 		return errors.New(clientNotFound)
 	}

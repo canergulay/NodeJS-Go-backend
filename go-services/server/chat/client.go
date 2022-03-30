@@ -1,8 +1,11 @@
 package chat
 
 import (
+	"context"
 	"fmt"
+	"time"
 
+	"github.com/canergulay/goservices/grpc_manager"
 	"github.com/gorilla/websocket"
 )
 
@@ -44,23 +47,25 @@ func (c Client) SendMessageHandler(conn *websocket.Conn) {
 	}
 }
 
-func HandleFirstMessageAndInitialiseClient(conn *websocket.Conn, message []byte) Client {
+func HandleFirstMessageAndInitialiseClient(conn *websocket.Conn, message []byte) (*Client, error) {
 
-	// FIRST MESSAGE WILL BE THE USERID
-	// LATER ON I WILL SETUP THE AUTHENTICATION FOR IT,
-	// CLIENT WILL SEND ITS JWT TOKEN AS THE FIRST MESSAGE THEN WE WILL VALIDATE AND GET ID FROM IT.
-	// IF NOT VALIDATED AND ID COULDN'T OBTAINED FROM THE JWT TOKEN ( THE FIRST MESSAGE AFTER CONNECTIN )
-	// WE WILL TERMINATE THE WEBSOCKET CONNECTION AND WONT LET THE CLIENT GET IN THE CONNECTED SOCKETSE POOL.
-	// SINCE IT IS NOT A SERIOUS PROJECT AND FOR THE SAKE OF SIMPLICITY, I WILL CONTINUE WITHOUT AUTHENTICATION.
-	// BUT IT IS REALLY EASY TO IMPLEMENT IT LATER ON.
+	token := string(message) // BEING USERID
 
-	userid := string(message) // BEING USERID
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	response, err := grpc_manager.ConnectGRPCServer().ValidateToken(ctx, &grpc_manager.ValidationRequest{
+		Token: token,
+	})
 
-	return Client{
-		Id:             userid,
-		SendMessage:    make(chan string),
-		ReceiveMessage: make(chan string),
+	if response.GetIsValid() && err == nil {
+		return &Client{
+			Id:             response.GetUserid(),
+			SendMessage:    make(chan string),
+			ReceiveMessage: make(chan string),
+		}, nil
 	}
+
+	return nil, err
 
 }
 
