@@ -4,7 +4,7 @@
 // 	protoc        v3.5.1
 // source: authentication.proto
 
-package grpc
+package grpc_manager
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
