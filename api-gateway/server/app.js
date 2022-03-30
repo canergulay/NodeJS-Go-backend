@@ -7,6 +7,7 @@ const express = require('express')
 const app = express()
 
 app.use('/assets', express.static("assets"));
+app.use('/avatars', express.static("assets/avatars"));
 
 app.use(express.json());
 app.use(express.raw());

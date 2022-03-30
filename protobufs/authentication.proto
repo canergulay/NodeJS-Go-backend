@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+message Token {
+    string token = 1;
+}
+
+message ValidationResult {
+    bool isValid = 1;
+    string userid = 2;
+}
+
+message ValidationRequest {
+    string token = 1;
+}
+
+service Validation{
+    rpc ValidateToken(ValidationRequest) returns (ValidationResult){}
+}
