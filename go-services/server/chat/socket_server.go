@@ -15,34 +15,27 @@ var upgrader = websocket.Upgrader{
 
 var SP = InitializeSocketPool()
 
-
 func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 
-	upgrader.CheckOrigin = func(r *http.Request) bool { return true} // TO PREVENT CORS ERRORS
+	upgrader.CheckOrigin = func(r *http.Request) bool { return true } // TO PREVENT CORS ERRORS
 
-    connection, err := upgrader.Upgrade(w, r, nil)
+	connection, err := upgrader.Upgrade(w, r, nil)
 
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
-    if err != nil {
-        log.Println(err)
-        return
-    }
-	
-	_,p,readError := connection.ReadMessage()
-	
-	 if(readError != nil){
-		 fmt.Println("unexpected read error")
-	 }
+	_, p, readError := connection.ReadMessage()
 
-	 clientCreated := HandleFirstMessageAndInitialiseClient(connection,p)
-	 SP.AddClientToPool(clientCreated)
+	if readError != nil {
+		fmt.Println("unexpected read error")
+	}
 
-	 go clientCreated.ReceiveMessageHandler(connection)
-	 go clientCreated.SendMessageHandler(connection)
-	
+	clientCreated := HandleFirstMessageAndInitialiseClient(connection, p)
+	SP.AddClientToPool(clientCreated)
 
- 
+	go clientCreated.ReceiveMessageHandler(connection)
+	go clientCreated.SendMessageHandler(connection)
+
 }
-
-
-

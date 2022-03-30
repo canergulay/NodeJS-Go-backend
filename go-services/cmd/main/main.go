@@ -10,5 +10,5 @@ import (
 func main() {
 
 	http.HandleFunc("/", chat.WebsocketHandler)
-	log.Fatal(http.ListenAndServe("localhost:8080",nil))
+	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
