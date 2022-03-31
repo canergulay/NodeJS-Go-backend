@@ -41,11 +41,13 @@ func (c Client) SendMessageHandler(conn *websocket.Conn) {
 	for {
 		var messageParsed ChatMessage
 		err := conn.ReadJSON(&messageParsed)
+		fmt.Println(messageParsed, err, " MESAJ BURADA !")
 		if err != nil {
 			go c.handleError(err)
 			return
 		}
-		fmt.Println(messageParsed)
+		fmt.Println(messageParsed, c.Id, c, "SOL")
+
 		message := ChatMessage{Sender: c.Id, Receiver: messageParsed.Receiver, Message: messageParsed.Message}
 		c.SP.SendMessageToUser(message)
 	}

@@ -71,14 +71,17 @@ func (server SocketServer) HandleFirstMessageAndInitialiseClient(conn *websocket
 
 	if response.GetIsValid() && err == nil {
 		defer sayUserHI(conn)
-		return &Client{
+		fmt.Println(response)
+		client := Client{
 			Id:             response.GetUserid(),
 			SendMessage:    make(chan ChatMessage),
 			ReceiveMessage: make(chan ChatMessage),
+			CloseClient:    make(chan bool),
 			SP:             &server.SP,
-		}, nil
+		}
+		fmt.Println(client.Id)
+		return &client, nil
 	}
-
 	return nil, err
 
 }

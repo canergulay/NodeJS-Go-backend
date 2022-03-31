@@ -1,6 +1,8 @@
 const protoLoader = require("@grpc/proto-loader");
 const grpc = require("@grpc/grpc-js");
+
 const ValidateToken = require('./services/ValidateToken')
+const SaveMassage = require("./services/SaveMessage")
 
 const protoPath = "../protobufs/authentication.proto";
 const port = "8081"
@@ -20,6 +22,7 @@ var server = new grpc.Server();
 
 server.addService(grpcObject.Validation.service, {
   ValidateToken: ValidateToken,
+  SaveMassage:  SaveMassage
 });
 
 
