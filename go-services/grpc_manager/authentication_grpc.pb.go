@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ValidationClient interface {
 	ValidateToken(ctx context.Context, in *ValidationRequest, opts ...grpc.CallOption) (*ValidationResult, error)
+	SaveMassage(ctx context.Context, in *ChatMessage, opts ...grpc.CallOption) (*SaveChatMessageResult, error)
 }
 
 type validationClient struct {
@@ -38,11 +39,21 @@ func (c *validationClient) ValidateToken(ctx context.Context, in *ValidationRequ
 	return out, nil
 }
 
+func (c *validationClient) SaveMassage(ctx context.Context, in *ChatMessage, opts ...grpc.CallOption) (*SaveChatMessageResult, error) {
+	out := new(SaveChatMessageResult)
+	err := c.cc.Invoke(ctx, "/Validation/SaveMassage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ValidationServer is the server API for Validation service.
 // All implementations must embed UnimplementedValidationServer
 // for forward compatibility
 type ValidationServer interface {
 	ValidateToken(context.Context, *ValidationRequest) (*ValidationResult, error)
+	SaveMassage(context.Context, *ChatMessage) (*SaveChatMessageResult, error)
 	mustEmbedUnimplementedValidationServer()
 }
 
@@ -52,6 +63,9 @@ type UnimplementedValidationServer struct {
 
 func (UnimplementedValidationServer) ValidateToken(context.Context, *ValidationRequest) (*ValidationResult, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
+}
+func (UnimplementedValidationServer) SaveMassage(context.Context, *ChatMessage) (*SaveChatMessageResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveMassage not implemented")
 }
 func (UnimplementedValidationServer) mustEmbedUnimplementedValidationServer() {}
 
@@ -84,6 +98,24 @@ func _Validation_ValidateToken_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Validation_SaveMassage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChatMessage)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ValidationServer).SaveMassage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Validation/SaveMassage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ValidationServer).SaveMassage(ctx, req.(*ChatMessage))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Validation_ServiceDesc is the grpc.ServiceDesc for Validation service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -94,6 +126,10 @@ var Validation_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidateToken",
 			Handler:    _Validation_ValidateToken_Handler,
+		},
+		{
+			MethodName: "SaveMassage",
+			Handler:    _Validation_SaveMassage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

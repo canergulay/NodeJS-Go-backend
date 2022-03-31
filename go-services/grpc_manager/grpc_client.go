@@ -11,14 +11,23 @@ var (
 	port = ":8081"
 )
 
-func ConnectGRPCServer() ValidationClient {
+type GRPCManager struct {
+	Connection *grpc.ClientConn
+	Client     *ValidationClient
+}
+
+func InitgRPCManager() GRPCManager {
+	conn := connectGRPCServer()
+	client := NewValidationClient(conn)
+	return GRPCManager{Connection: conn, Client: &client}
+}
+
+func connectGRPCServer() *grpc.ClientConn {
 
 	conn, err := grpc.Dial(port, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
 
-	validationClient := NewValidationClient(conn)
-
-	return validationClient
+	return conn
 }

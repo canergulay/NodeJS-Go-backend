@@ -1,0 +1,32 @@
+syntax = "proto3";
+option go_package =  "./grpcmassasnager";
+
+message Token {
+    string token = 1;
+}
+
+message ValidationResult {
+    bool isValid = 1;
+    string userid = 2;
+}
+
+message ValidationRequest {
+    string token = 1;
+}
+
+message ChatMessage {
+    string sender = 1;
+    string receiver = 2;
+    string message = 3;
+    string conversationId = 4;
+}
+
+message SaveChatMessageResult {
+    bool isOkey = 1;
+}
+
+
+service Validation{
+    rpc ValidateToken(ValidationRequest) returns (ValidationResult){}
+    rpc SaveMassage(ChatMessage) returns (SaveChatMessageResult){}
+}
