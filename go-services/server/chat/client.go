@@ -2,7 +2,9 @@ package chat
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/canergulay/goservices/grpc_manager"
@@ -15,21 +17,24 @@ var (
 
 type Client struct {
 	Id             string
-	SendMessage    chan string
-	ReceiveMessage chan string
+	SendMessage    chan ChatMessage
+	ReceiveMessage chan ChatMessage
+	CloseClient    chan bool
 }
 
 func (c Client) ReceiveMessageHandler(conn *websocket.Conn) {
 	for {
 		select {
 		case msg := <-c.ReceiveMessage:
-			if msg != CLOSED_CONNECTION {
-				fmt.Println(c.Id, " soldaki id sagdaki mesaji alacak ", msg)
-				conn.WriteMessage(1, []byte(fmt.Sprintf("a message has been sent to you : %s", msg)))
-			} else {
-				close(c.ReceiveMessage)
-				return
+			messageJSON, err := json.Marshal(msg)
+			if err != nil {
+				log.Println("An error has occured when tried to parse message, ", err, msg)
+				break
 			}
+			conn.WriteMessage(1, messageJSON)
+		case <-c.CloseClient:
+			close(c.ReceiveMessage)
+			close(c.CloseClient)
 		}
 	}
 }
@@ -43,25 +48,29 @@ func (c Client) SendMessageHandler(conn *websocket.Conn) {
 			return
 		}
 		fmt.Println(messageParsed)
-		SP.SendMessageToUser(messageParsed.Receiver, messageParsed.Message)
+		message := ChatMessage{Sender: c.Id, Receiver: messageParsed.Receiver, Message: messageParsed.Message}
+		SP.SendMessageToUser(message)
 	}
 }
 
 func HandleFirstMessageAndInitialiseClient(conn *websocket.Conn, message []byte) (*Client, error) {
 
 	token := string(message) // BEING USERID
-
+	fmt.Println(token)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
+
 	response, err := grpc_manager.ConnectGRPCServer().ValidateToken(ctx, &grpc_manager.ValidationRequest{
 		Token: token,
 	})
+	fmt.Println(response, " response here", err)
 
 	if response.GetIsValid() && err == nil {
+
 		return &Client{
 			Id:             response.GetUserid(),
-			SendMessage:    make(chan string),
-			ReceiveMessage: make(chan string),
+			SendMessage:    make(chan ChatMessage),
+			ReceiveMessage: make(chan ChatMessage),
 		}, nil
 	}
 
@@ -77,7 +86,7 @@ func (c Client) handleError(err error) {
 			websocket.CloseGoingAway,
 			websocket.CloseNoStatusReceived:
 			fmt.Printf("User with the id %s is leaving.", c.Id)
-			c.ReceiveMessage <- CLOSED_CONNECTION
+			c.CloseClient <- true
 			SP.RemoveClientFromPool(c.Id)
 		}
 	}

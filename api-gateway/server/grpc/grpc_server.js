@@ -23,6 +23,8 @@ server.addService(grpcObject.Validation.service, {
 });
 
 
+
+
 module.exports = () => {
   server.bindAsync(
     `localhost:${port}`,

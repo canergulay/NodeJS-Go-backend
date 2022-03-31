@@ -1,7 +1,6 @@
 package chat
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -26,19 +25,27 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, p, readError := connection.ReadMessage()
+	_, p, readError := connection.ReadMessage() // FIRST MESSAGE TO HANDLE AUTHENTICATION
 
 	if readError != nil {
-		fmt.Println("unexpected read error")
+		handleFirstMessageError(connection)
+		return
 	}
+
 	clientCreated, err := HandleFirstMessageAndInitialiseClient(connection, p)
+
 	if err == nil && clientCreated != nil {
 		SP.AddClientToPool(*clientCreated)
 		go clientCreated.ReceiveMessageHandler(connection)
 		go clientCreated.SendMessageHandler(connection)
-		fmt.Printf("USER WITH ID %s HAS SUCCESSFULLY AUTHENTICATED HIMSELF WITH HIS JWT", clientCreated.Id)
 	} else {
 		connection.Close() // OUR USER COULDN'T VERIFY HIS IDENTITY WITH A VALID JWT THAT HOLDS HIS USERID
 	}
 
+}
+
+func handleFirstMessageError(connection *websocket.Conn) {
+	log.Println(FIRST_MESSAGE_ERROR)
+	connection.WriteMessage(1, []byte(FIRST_MESSAGE_ERROR))
+	connection.Close()
 }

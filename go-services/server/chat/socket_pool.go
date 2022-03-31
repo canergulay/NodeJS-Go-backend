@@ -40,8 +40,8 @@ func (sp SocketPool) RemoveClientFromPool(id string) error {
 	return nil
 }
 
-func (sp SocketPool) SendMessageToUser(id string, message string) error {
-	Client, ok := sp.Clients[id]
+func (sp SocketPool) SendMessageToUser(message ChatMessage) error {
+	Client, ok := sp.Clients[message.Receiver]
 
 	if !ok {
 		return errors.New(clientNotFound)
