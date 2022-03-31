@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/canergulay/goservices/grpc_manager"
+	"gorm.io/gorm"
 )
 
 var (
@@ -11,14 +12,15 @@ var (
 )
 
 type SocketPool struct {
-	Clients          map[string]Client
-	ValidationClient grpc_manager.ValidationClient
+	Clients      map[string]Client
+	PGConnection *gorm.DB
+	GRPCmanager  grpc_manager.GRPCManager
 }
 
-func InitializeSocketPool() SocketPool {
+func InitializeSocketPool(db *gorm.DB) SocketPool {
 	clients := make(map[string]Client)
-	validationClient := grpc_manager.ConnectGRPCServer()
-	return SocketPool{Clients: clients, ValidationClient: validationClient}
+	grpcManager := grpc_manager.InitgRPCManager()
+	return SocketPool{Clients: clients, PGConnection: db, GRPCmanager: grpcManager}
 }
 
 func (sp SocketPool) AddClientToPool(client Client) {

@@ -15,7 +15,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	socketServer := chat.InitializeSocketServer(chat.InitializeSocketPool(), global.InitPostgreSQL())
+	pgConnection := global.InitPostgreSQL()
+	socketPool := chat.InitializeSocketPool(pgConnection)
+	socketServer := chat.InitializeSocketServer(socketPool, pgConnection)
 
 	http.HandleFunc("/", socketServer.WebsocketHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))

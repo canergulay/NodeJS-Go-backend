@@ -58,17 +58,16 @@ func (s SocketServer) WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (s SocketServer) HandleFirstMessageAndInitialiseClient(conn *websocket.Conn, message []byte) (*Client, error) {
+func (server SocketServer) HandleFirstMessageAndInitialiseClient(conn *websocket.Conn, message []byte) (*Client, error) {
 
 	token := string(message) // BEING USERID
 	fmt.Println(token)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	response, err := grpc_manager.ConnectGRPCServer().ValidateToken(ctx, &grpc_manager.ValidationRequest{
+	response, err := (*server.SP.GRPCmanager.Client).ValidateToken(ctx, &grpc_manager.ValidationRequest{
 		Token: token,
 	})
-	fmt.Println(response, " response here", err)
 
 	if response.GetIsValid() && err == nil {
 		defer sayUserHI(conn)
@@ -76,7 +75,7 @@ func (s SocketServer) HandleFirstMessageAndInitialiseClient(conn *websocket.Conn
 			Id:             response.GetUserid(),
 			SendMessage:    make(chan ChatMessage),
 			ReceiveMessage: make(chan ChatMessage),
-			SP:             &s.SP,
+			SP:             &server.SP,
 		}, nil
 	}
 
