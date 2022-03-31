@@ -44,6 +44,8 @@ func (sp SocketPool) SendMessageToUser(message ChatMessage) error {
 	Client, ok := sp.Clients[message.Receiver]
 
 	if !ok {
+		// THAT MEANS OUR USER IS NOT ONLINE.
+
 		return errors.New(clientNotFound)
 	}
 	Client.ReceiveMessage <- message

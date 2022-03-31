@@ -1,13 +1,10 @@
 package chat
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"log"
-	"time"
 
-	"github.com/canergulay/goservices/grpc_manager"
 	"github.com/gorilla/websocket"
 )
 
@@ -20,6 +17,7 @@ type Client struct {
 	SendMessage    chan ChatMessage
 	ReceiveMessage chan ChatMessage
 	CloseClient    chan bool
+	SP             *SocketPool
 }
 
 func (c Client) ReceiveMessageHandler(conn *websocket.Conn) {
@@ -49,33 +47,12 @@ func (c Client) SendMessageHandler(conn *websocket.Conn) {
 		}
 		fmt.Println(messageParsed)
 		message := ChatMessage{Sender: c.Id, Receiver: messageParsed.Receiver, Message: messageParsed.Message}
-		SP.SendMessageToUser(message)
+		c.SP.SendMessageToUser(message)
 	}
 }
 
-func HandleFirstMessageAndInitialiseClient(conn *websocket.Conn, message []byte) (*Client, error) {
-
-	token := string(message) // BEING USERID
-	fmt.Println(token)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
-
-	response, err := grpc_manager.ConnectGRPCServer().ValidateToken(ctx, &grpc_manager.ValidationRequest{
-		Token: token,
-	})
-	fmt.Println(response, " response here", err)
-
-	if response.GetIsValid() && err == nil {
-
-		return &Client{
-			Id:             response.GetUserid(),
-			SendMessage:    make(chan ChatMessage),
-			ReceiveMessage: make(chan ChatMessage),
-		}, nil
-	}
-
-	return nil, err
-
+func sayUserHI(conn *websocket.Conn) {
+	conn.WriteMessage(1, []byte("You are connected successfully !"))
 }
 
 func (c Client) handleError(err error) {
@@ -87,7 +64,7 @@ func (c Client) handleError(err error) {
 			websocket.CloseNoStatusReceived:
 			fmt.Printf("User with the id %s is leaving.", c.Id)
 			c.CloseClient <- true
-			SP.RemoveClientFromPool(c.Id)
+			c.SP.RemoveClientFromPool(c.Id)
 		}
 	}
 }
