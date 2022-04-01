@@ -37,12 +37,16 @@ func (c Client) SendMessageHandler(conn *websocket.Conn) {
 	for {
 		var messageParsed ChatMessage
 		err := conn.ReadJSON(&messageParsed)
-		fmt.Println(messageParsed, err, " MESAJ BURADA !")
+
 		if err != nil {
 			go c.handleError(err)
 			return
 		}
-		fmt.Println(messageParsed, c.Id, c, "SOL")
+
+		// WE SHOULD NOTIFY OUR CLIENT THAT WE RECEIVED THE MESSAGE WHICH WILL BE CONVEYED TO RECEIVER.
+		// FOR THE SAKE OF THE SIMPLICITY, I WON'T CREATEA NOTHER CHANNEL FOR SUCCESS RESPONSES.
+		// SIMPLY, THE RETURN MESSAGE WILL BE A NORMAL CHAT MESSAGE FROM server TO OUR  CLIENT THAT SAYS 'success'
+		c.ReceiveMessage <- ChatMessage{Sender: "server", Message: "success"}
 
 		message := ChatMessage{Sender: c.Id, Receiver: messageParsed.Receiver, Message: messageParsed.Message}
 		c.SP.SendMessageToUser(message)
