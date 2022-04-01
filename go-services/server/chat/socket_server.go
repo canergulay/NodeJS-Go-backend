@@ -76,7 +76,6 @@ func (server SocketServer) HandleFirstMessageAndInitialiseClient(conn *websocket
 			Id:             response.GetUserid(),
 			SendMessage:    make(chan ChatMessage),
 			ReceiveMessage: make(chan ChatMessage),
-			CloseClient:    make(chan bool),
 			SP:             &server.SP,
 		}
 		fmt.Println(client.Id)

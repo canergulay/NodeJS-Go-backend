@@ -16,7 +16,6 @@ type Client struct {
 	Id             string
 	SendMessage    chan ChatMessage
 	ReceiveMessage chan ChatMessage
-	CloseClient    chan bool
 	SP             *SocketPool
 }
 
@@ -30,9 +29,6 @@ func (c Client) ReceiveMessageHandler(conn *websocket.Conn) {
 				break
 			}
 			conn.WriteMessage(1, messageJSON)
-		case <-c.CloseClient:
-			c.closeChannels()
-			c.SP.RemoveClientFromPool(c.Id)
 		}
 	}
 }
@@ -65,13 +61,13 @@ func (c Client) handleError(err error) {
 			websocket.CloseGoingAway,
 			websocket.CloseNoStatusReceived:
 			fmt.Printf("User with the id %s is leaving.", c.Id)
-			c.CloseClient <- true
+			c.closeChannelsAndRemoveClient()
 		}
 	}
 }
 
-func (c Client) closeChannels() {
-	close(c.CloseClient)
+func (c Client) closeChannelsAndRemoveClient() {
+	c.SP.RemoveClientFromPool(c.Id)
 	close(c.ReceiveMessage)
 	close(c.SendMessage)
 }
