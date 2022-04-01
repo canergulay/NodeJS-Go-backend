@@ -11,20 +11,30 @@ const CreateConversation = (user1, user2) => {
   return conversation.save();
 };
 
-const GetConversationById = (id)=>{
-    const conversation = Conversation.findById(id)
-    return conversation
-}
+const GetConversationsUserIn = (userid) => {
+  const conversations = Conversation.find({ users: { $in: [userid] } });
+  return conversations;
+};
 
-const UpdateConversationLastMessage = (id,lastMessage) =>{
-  return Conversation.findByIdAndUpdate(id,{lastMessage})
-}
+const GetConversationById = (id) => {
+  const conversation = Conversation.findById(id);
+  return conversation;
+};
+
+const UpdateConversationLastMessage = (id, lastMessage) => {
+  return Conversation.findByIdAndUpdate(id, { lastMessage });
+};
 
 const CheckIfConversationExist = (user1, user2) => {
   const conversations = Conversation.find({ users: { $all: [user1, user2] } });
-  return conversations
-
+  return conversations;
 };
 
-
-module.exports = {SaveMessage,CreateConversation,CheckIfConversationExist,GetConversationById,UpdateConversationLastMessage}
+module.exports = {
+  SaveMessage,
+  CreateConversation,
+  CheckIfConversationExist,
+  GetConversationById,
+  UpdateConversationLastMessage,
+  GetConversationsUserIn,
+};

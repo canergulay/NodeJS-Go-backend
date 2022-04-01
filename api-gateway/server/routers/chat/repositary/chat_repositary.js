@@ -1,10 +1,22 @@
+
+const responseWrapper = require("../../../utils/response_wrapper");
+
 const {
   SaveMessage,
   CreateConversation,
   CheckIfConversationExist,
   GetConversationById,
   UpdateConversationLastMessage,
+  GetConversationsUserIn
 } = require("../datasource/chat_datasource");
+
+const CheckUserConversationsRepositary = userid =>{
+  GetConversationsUserIn(userid).then(conversations=>{
+    return responseWrapper(0,conversations)
+  }).catch(e=>{
+    return responseWrapper(1,e)
+  })
+}
 
 const SaveMessageRepositary = (message) => {
   SaveMessage(message)
@@ -40,30 +52,10 @@ const CheckIfConversationExistAndSaveMessage = (message) => {
       }
     }
   );
-
-  // return CreateConversation(message.sender, message.receiver)
-  //   .then((conversation) => {
-  //     console.log("POINT 3");
-
-  //     return SaveMessageRepositary({
-  //       ...message,
-  //     });
-  //   })
-  //   .then((messagesaved) => {
-  //     console.log("POINT 4 ");
-
-  //     console.log(messagesaved, " SAVED !");
-  //   })
-  //   .catch((e) => {
-  //     console.log("POINT 5 ");
-
-  //     console.log(e);
-  //   });
-
-  //SaveMessageRepositary(message);
 };
 
 module.exports = {
   SaveMessageRepositary,
   CheckIfConversationExistAndSaveMessage,
+  CheckUserConversationsRepositary,
 };
