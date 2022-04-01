@@ -9,10 +9,11 @@ const {
 const SaveMessageRepositary = (message) => {
   SaveMessage(message)
     .then((saved) => {
-      const conversationId = { message };
+      const { conversationId } = message;
       return UpdateConversationLastMessage(conversationId, saved.id);
     })
     .then((conversationUpdated) => {
+      console.log(conversationUpdated);
       return true;
     })
     .catch((e) => {
@@ -22,50 +23,44 @@ const SaveMessageRepositary = (message) => {
 };
 
 const CheckIfConversationExistAndSaveMessage = (message) => {
+  CheckIfConversationExist(message.sender, message.receiver).then(
+    (conversations) => {
+      const doesConversationExist = conversations.length >= 1;
+      if (doesConversationExist) {
+        let conversation = conversations[0];
+        message.conversationId = conversation.id;
+        SaveMessageRepositary(message);
+      } else {
+        CreateConversation(message.sender, message.receiver).then(
+          (conversationCreated) => {
+            message.conversationId = conversationCreated.id;
+            SaveMessageRepositary(message);
+          }
+        );
+      }
+    }
+  );
 
-  CheckIfConversationExist(message.sender,message.receiver).then(conversations=>{
-   if(conversations.length>=1){
-     let conversation = conversations[0]
-     message.conversationId = conversation.id
-     SaveMessage(message).then(savedMessage=>{
-       console.log("message saved")
-       console.log(savedMessage)
-     })
-   }else{
-     CreateConversation(message.sender,message.receiver).then(conversationCreated=>{
-      message.conversationId = conversationCreated.id
-      SaveMessage(message).then(savedMessage=>{
-        console.log("conversation created and the message saved !! ")
-        console.log(savedMessage)
-      })
-     })
-   }
-  })
- 
+  // return CreateConversation(message.sender, message.receiver)
+  //   .then((conversation) => {
+  //     console.log("POINT 3");
 
+  //     return SaveMessageRepositary({
+  //       ...message,
+  //     });
+  //   })
+  //   .then((messagesaved) => {
+  //     console.log("POINT 4 ");
 
-    
-    // return CreateConversation(message.sender, message.receiver)
-    //   .then((conversation) => {
-    //     console.log("POINT 3");
+  //     console.log(messagesaved, " SAVED !");
+  //   })
+  //   .catch((e) => {
+  //     console.log("POINT 5 ");
 
-    //     return SaveMessageRepositary({
-    //       ...message,
-    //     });
-    //   })
-    //   .then((messagesaved) => {
-    //     console.log("POINT 4 ");
+  //     console.log(e);
+  //   });
 
-    //     console.log(messagesaved, " SAVED !");
-    //   })
-    //   .catch((e) => {
-    //     console.log("POINT 5 ");
-
-    //     console.log(e);
-    //   });
- 
-    //SaveMessageRepositary(message);
-  
+  //SaveMessageRepositary(message);
 };
 
 module.exports = {
