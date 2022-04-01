@@ -1,17 +1,25 @@
 
 const {SaveMessageRepositary,CheckIfConversationExistAndSaveMessage} = require('../../routers/chat/repositary/chat_repositary')
+const {Logger} = require("../../utils/log_manager")
 
 const SaveMessage = (Message,callback)=>{
-    console.log(Message.request)
+
     const message = Message.request
 
     callback(null,{isOkey:true})
-    if(message.conversationId == null || message.conversationId.length <=1 ){
-        console.log("evet conversation bos, ilk once conversationu olusturacagiz")
-        CheckIfConversationExistAndSaveMessage(message)
-    }else{
-        console.log("yoo conversation ortada !")
-        SaveMessageRepositary(message)
+    handleMessagePersisting(message)
+}
+
+
+const handleMessagePersisting = (message) => {
+    try{
+        if(message.conversationId == null || message.conversationId.length <=1 ){
+            CheckIfConversationExistAndSaveMessage(message)
+        }else{
+            SaveMessageRepositary(message)
+        }
+    }catch(e){
+        Logger(e,"Unexpected error when handling save massage rpc call from the chat service")
     }
 }
 
