@@ -31,8 +31,8 @@ func (c Client) ReceiveMessageHandler(conn *websocket.Conn) {
 			}
 			conn.WriteMessage(1, messageJSON)
 		case <-c.CloseClient:
-			close(c.ReceiveMessage)
-			close(c.CloseClient)
+			c.closeChannels()
+			c.SP.RemoveClientFromPool(c.Id)
 		}
 	}
 }
@@ -66,7 +66,12 @@ func (c Client) handleError(err error) {
 			websocket.CloseNoStatusReceived:
 			fmt.Printf("User with the id %s is leaving.", c.Id)
 			c.CloseClient <- true
-			c.SP.RemoveClientFromPool(c.Id)
 		}
 	}
+}
+
+func (c Client) closeChannels() {
+	close(c.CloseClient)
+	close(c.ReceiveMessage)
+	close(c.SendMessage)
 }

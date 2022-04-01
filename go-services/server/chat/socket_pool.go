@@ -33,16 +33,13 @@ func (sp SocketPool) AddClientToPool(client Client) {
 
 func (sp SocketPool) RemoveClientFromPool(id string) error {
 
-	Client, ok := sp.Clients[id]
+	_, ok := sp.Clients[id]
 
 	if !ok {
 		return errors.New(clientNotFound)
 	}
 
 	delete(sp.Clients, id)
-	close(Client.ReceiveMessage)
-	close(Client.SendMessage)
-
 	return nil
 }
 
