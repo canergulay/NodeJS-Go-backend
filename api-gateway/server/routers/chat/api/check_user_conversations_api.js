@@ -1,13 +1,22 @@
-const {CheckUserConversationsRepositary} = require("../repositary/chat_repositary")
-const responseWrapper = require("../../../utils/response_wrapper")
-const {Logger} = require("../../../utils/log_manager")
-const GetUserConversationsAPI = (req,res) => {
-   CheckUserConversationsRepositary(req.userid).then(result=>{
-      res.send(results)
-   }).catch(e => {
-      Logger(e," An unexpected error has happened when getting results from CheckUserConversationsRepositary")
-      res.send(responseWrapper(1,e))
-   })
+const {
+  CheckUserConversationsRepositary,
+  GetMessagesRepositary,
+} = require("../repositary/chat_repositary");
+
+const GetUserConversationsAPI = (req, res) => {
+  CheckUserConversationsRepositary(req.userid)
+    .then((result) => {
+      res.send(result)
+    }) // EROR IS HANDLED IN THE REPOSITARY LAYER.
 }
 
-module.exports = {GetUserConversationsAPI}
+const GetMessagesAPI = (req, res) => {
+  const { conversationId, lastMessageCreatedAt } = req.body;
+  GetMessagesRepositary(conversationId, lastMessageCreatedAt).then(
+    (messagesResponse) => {
+      res.send(messagesResponse); 
+    }
+  ) // EROR IS HANDLED IN THE REPOSITARY LAYER.
+}
+
+module.exports = { GetUserConversationsAPI, GetMessagesAPI };

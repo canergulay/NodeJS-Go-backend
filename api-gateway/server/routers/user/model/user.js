@@ -41,7 +41,7 @@ userSchema.methods.generateToken = async function () {
 userSchema.methods.clearify = function () {
   const user = this;
   return {
-    id: user.id,
+    _id: user.id,
     username: user.username,
     email: user.email,
     phone: user.phone,
