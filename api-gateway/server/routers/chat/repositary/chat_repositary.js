@@ -11,7 +11,7 @@ const {
 } = require("../datasource/chat_datasource");
 
 const CheckUserConversationsRepositary = userid =>{
-  GetConversationsUserIn(userid).then(conversations=>{
+ return GetConversationsUserIn(userid).then(conversations=>{
     return responseWrapper(0,conversations)
   }).catch(e=>{
     return responseWrapper(1,e)

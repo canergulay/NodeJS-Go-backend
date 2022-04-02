@@ -12,7 +12,10 @@ const CreateConversation = (user1, user2) => {
 };
 
 const GetConversationsUserIn = (userid) => {
-  const conversations = Conversation.find({ users: { $in: [userid] } });
+  const conversations = Conversation.find({ users: { $in: [userid] } })
+    .populate("users")
+    .populate("lastMessage");
+
   return conversations;
 };
 

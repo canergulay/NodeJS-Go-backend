@@ -1,4 +1,4 @@
-const GetUserConversationsAPI = require("./api/check_user_conversations_api")
+const {GetUserConversationsAPI} = require("./api/check_user_conversations_api")
 
 
 const express = require('express')
