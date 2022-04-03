@@ -48,7 +48,7 @@ func (c Client) SendMessageHandler(conn *websocket.Conn) {
 		// SIMPLY, THE RETURN MESSAGE WILL BE A NORMAL CHAT MESSAGE FROM server TO OUR  CLIENT THAT SAYS 'success'
 		c.ReceiveMessage <- ChatMessage{Sender: "server", Message: "success"}
 
-		message := ChatMessage{Sender: c.Id, Receiver: messageParsed.Receiver, Message: messageParsed.Message}
+		message := ChatMessage{Sender: c.Id, Receiver: messageParsed.Receiver, Message: messageParsed.Message, ConversationId: messageParsed.ConversationId}
 		c.SP.SendMessageToUser(message)
 	}
 }
