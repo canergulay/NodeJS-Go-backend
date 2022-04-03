@@ -52,13 +52,23 @@ func (sp SocketPool) SendMessageToUser(message ChatMessage) {
 		persistMessage(message, true, sp) // TRUE --> send notification to the user that he / she has new messages.
 		return
 	}
-	Client.ReceiveMessage <- message
-	persistMessage(message, false, sp) // FALSE --> he / seis online and able to see the message, no need for notification.
+	// he / she is online.
+	// we have to check conversationId before moving on since if it is empty, we should get it from the rpc server when we persist the message.
+	if len(message.ConversationId) > 0 {
+		Client.ReceiveMessage <- message
+		persistMessage(message, false, sp)
+	} else {
+		result := persistMessage(message, false, sp)
+		if result.GetIsOkey() {
+			message.ConversationId = result.GetConversationId()
+			Client.ReceiveMessage <- message
+		}
+	}
 
 }
 
-func persistMessage(message ChatMessage, notify bool, sp SocketPool) {
-	sp.MessagePersister.PersistMessageFourOflineUser(
+func persistMessage(message ChatMessage, notify bool, sp SocketPool) *grpc_manager.SaveChatMessageResult {
+	return sp.MessagePersister.PersistMessageFourOflineUser(
 		message.Sender,
 		message.Receiver,
 		message.Message,

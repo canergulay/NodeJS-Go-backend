@@ -16,7 +16,7 @@ func InitializeMessagePersister(manager *grpc_manager.GRPCManager) MessagePersis
 	return MessagePersister{GRPCManager: manager}
 }
 
-func (persister MessagePersister) PersistMessageFourOflineUser(sender string, receiver string, message string, conversationId string, notify bool) {
+func (persister MessagePersister) PersistMessageFourOflineUser(sender string, receiver string, message string, conversationId string, notify bool) *grpc_manager.SaveChatMessageResult {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
@@ -31,5 +31,6 @@ func (persister MessagePersister) PersistMessageFourOflineUser(sender string, re
 	if err != nil {
 		log.Println(response.GetIsOkey(), err)
 	}
+	return response
 
 }
