@@ -11,9 +11,12 @@ const GetUserConversationsAPI = (req, res) => {
 }
 
 const GetMessagesAPI = (req, res) => {
-  const { conversationId, lastMessageCreatedAt } = req.body;
-  GetMessagesRepositary(conversationId, lastMessageCreatedAt).then(
+  console.log(req.body)
+  const { conversationId, lastCreated } = req.body;
+  GetMessagesRepositary(conversationId, lastCreated).then(
     (messagesResponse) => {
+       console.log(conversationId,lastCreated)
+       console.log(messagesResponse)
       res.send(messagesResponse); 
     }
   ) // EROR IS HANDLED IN THE REPOSITARY LAYER.

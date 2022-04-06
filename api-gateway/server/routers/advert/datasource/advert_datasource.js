@@ -54,8 +54,15 @@ async function operate(element, advert) {
   );
 }
 
+function GetAdvertsByUserId(userid){
+  const adverts = Advert.find({owner:userid})
+  return adverts
+}
+
+
 module.exports = {
   saveAdvert,
   populateAdvertToUpperLocations,
   getAdvertsByBoundaries,
+  GetAdvertsByUserId,
 };

@@ -49,6 +49,9 @@ func (c Client) SendMessageHandler(conn *websocket.Conn) {
 		c.ReceiveMessage <- ChatMessage{Sender: "server", Message: "success"}
 
 		message := ChatMessage{Sender: c.Id, Receiver: messageParsed.Receiver, Message: messageParsed.Message, ConversationId: messageParsed.ConversationId}
+		fmt.Println("deneyelim bakalim :")
+		fmt.Println(message)
+		fmt.Println(messageParsed)
 		c.SP.SendMessageToUser(message)
 	}
 }

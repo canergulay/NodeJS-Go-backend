@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+option go_package =  "./grpc_manager";
+
 message Token {
     string token = 1;
 }
@@ -23,6 +25,7 @@ message ChatMessage {
 
 message SaveChatMessageResult {
     bool isOkey = 1;
+    string conversationId = 2;
 }
 
 

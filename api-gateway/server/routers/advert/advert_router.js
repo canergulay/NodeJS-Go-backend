@@ -13,10 +13,12 @@ router.use(AuthenticationMiddleVare)
 var categories = '/categories'
 var advertSave = '/advert/save'
 var advertGet = '/advert/get'
+var advertMyGet = '/advert/get/my'
 
 router.post(categories,AuthenticationMiddleVare,getCategoriesAPI.getCategories)
 router.post(advertSave,advertAPI.saveAdvertAPI)
 router.get(advertGet,advertAPI.getAdvertsAPI)
+router.get(advertMyGet,advertAPI.getMyAdvertsAPI)
 
 
 

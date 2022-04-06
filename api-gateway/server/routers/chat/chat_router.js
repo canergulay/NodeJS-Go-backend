@@ -5,11 +5,10 @@ const express = require('express')
 const router = express.Router()
 
 const conversationsApiSuffix = '/chat/conversations'
-const MessagesApiSuffix = '/chat/messages'
+const messagesApiSuffix = '/chat/messages'
 
-
+router.post(messagesApiSuffix,GetMessagesAPI)
 router.get(conversationsApiSuffix,GetUserConversationsAPI)
-router.get(MessagesApiSuffix,GetMessagesAPI)
 
 
 module.exports = router

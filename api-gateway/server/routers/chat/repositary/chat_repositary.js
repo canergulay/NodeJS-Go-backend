@@ -42,6 +42,7 @@ const GetMessagesRepositary = (conversationid, lastMessageCreatedAt) => {
 };
 
 const SaveMessageRepositary = (message) => {
+  console.log(message)
   SaveMessage(message)
     .then((saved) => {
       const { conversationId } = message;
@@ -57,24 +58,27 @@ const SaveMessageRepositary = (message) => {
     });
 };
 
-const CheckIfConversationExistAndSaveMessage = (message) => {
-  CheckIfConversationExist(message.sender, message.receiver).then(
+const CheckIfConversationExistAndSaveMessage = async (message) => {
+  let convid = await CheckIfConversationExist(message.sender, message.receiver).then(
     (conversations) => {
       const doesConversationExist = conversations.length >= 1;
       if (doesConversationExist) {
         let conversation = conversations[0];
         message.conversationId = conversation.id;
         SaveMessageRepositary(message);
+        return conversation.id
       } else {
         CreateConversation(message.sender, message.receiver).then(
           (conversationCreated) => {
             message.conversationId = conversationCreated.id;
             SaveMessageRepositary(message);
+            return conversationCreated.id
           }
         );
       }
     }
   );
+  return convid
 };
 
 module.exports = {

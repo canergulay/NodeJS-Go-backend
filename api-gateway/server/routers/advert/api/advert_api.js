@@ -14,4 +14,11 @@ async function saveAdvertAPI(req,res){
    res.send(await AdvertRepositary.getAdvertsByLatLonRepositary(lat,lon))
 }
 
-module.exports = {saveAdvertAPI,getAdvertsAPI}
+function getMyAdvertsAPI(req,res){
+    let userid = req.userid
+    AdvertRepositary.GetMyAdvertsRepositary(userid).then(response=>{
+        res.send(response) 
+    })
+}
+
+module.exports = {saveAdvertAPI,getAdvertsAPI,getMyAdvertsAPI}

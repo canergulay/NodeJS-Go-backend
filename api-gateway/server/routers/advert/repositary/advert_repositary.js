@@ -57,4 +57,12 @@ async function getAdvertsByLatLonRepositary(lat, lon) {
   }
 }
 
-module.exports = { saveAdvertRepositary, getAdvertsByLatLonRepositary };
+function GetMyAdvertsRepositary(userid){
+  return AdvertDataSource.GetAdvertsByUserId(userid).then(adverts=>{
+    return responser(0,adverts)
+  }).catch(e=>{
+    return responser(1,e)
+  })
+}
+
+module.exports = { saveAdvertRepositary, getAdvertsByLatLonRepositary , GetMyAdvertsRepositary};
