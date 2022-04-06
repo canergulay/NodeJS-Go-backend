@@ -55,7 +55,7 @@ async function operate(element, advert) {
 }
 
 function GetAdvertsByUserId(userid){
-  const adverts = Advert.find({owner:userid})
+  const adverts = Advert.find({owner:userid}).populate("category")
   return adverts
 }
 

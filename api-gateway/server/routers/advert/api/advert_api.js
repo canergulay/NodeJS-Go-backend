@@ -17,6 +17,7 @@ async function saveAdvertAPI(req,res){
 function getMyAdvertsAPI(req,res){
     let userid = req.userid
     AdvertRepositary.GetMyAdvertsRepositary(userid).then(response=>{
+        console.log(response)
         res.send(response) 
     })
 }
