@@ -3,7 +3,7 @@ const LocationDataSource = require("../../location/datasource/search_location");
 const locationRepositary = require("../../location/repositary/location_repositary");
 const responser = require("../../../utils/response_wrapper");
 const Advert = require("../model/advert");
-
+const Logger = require("../../../utils/log_manager")
 async function saveAdvertRepositary(advert, userid) {
   try {
     
@@ -65,4 +65,15 @@ function GetMyAdvertsRepositary(userid){
   })
 }
 
-module.exports = { saveAdvertRepositary, getAdvertsByLatLonRepositary , GetMyAdvertsRepositary};
+function DeleteMyAdvert(advertid,userid){
+  try{
+    const advert = AdvertDataSource.DeleteAdvertById(advertid,userid)
+    return responser(0,{isDeleted:true})
+  }catch(e){
+    Logger(e,`An unexpected error when trying to delete advert by advertid and userid : ${advertid} ${userid}`)
+    return responser(1,{isDeleted:false})
+  }
+  
+}
+
+module.exports = { saveAdvertRepositary, getAdvertsByLatLonRepositary , GetMyAdvertsRepositary,DeleteMyAdvert};

@@ -59,10 +59,23 @@ function GetAdvertsByUserId(userid){
   return adverts
 }
 
+async function DeleteAdvertById(advertid,userid){
+  let advert = await Advert.findById(advertid)
+  if(advert.owner == userid){
+    const advertDeleted = await Advert.findByIdAndDelete(advertid)
+    if(!advertDeleted){
+    throw new Error("unexpectedError",`There is no an advert with the id ${advertid}`)
+    }
+    return advertDeleted
+  }else{
+    throw new Error("unexpectedError","The advert owner and given userid didn't match.")
+  }
+}
 
 module.exports = {
   saveAdvert,
   populateAdvertToUpperLocations,
   getAdvertsByBoundaries,
   GetAdvertsByUserId,
+  DeleteAdvertById
 };

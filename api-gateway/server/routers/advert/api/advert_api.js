@@ -22,4 +22,11 @@ function getMyAdvertsAPI(req,res){
     })
 }
 
-module.exports = {saveAdvertAPI,getAdvertsAPI,getMyAdvertsAPI}
+function deleteMyAdvertAPI(req,res){
+    let userid = req.userid
+    let advertid = req.body.advertid
+    let response = AdvertRepositary.DeleteMyAdvert(advertid,userid)
+    res.send(response)
+}
+
+module.exports = {saveAdvertAPI,getAdvertsAPI,getMyAdvertsAPI,deleteMyAdvertAPI}
