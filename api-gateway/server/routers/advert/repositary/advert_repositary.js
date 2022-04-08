@@ -3,7 +3,7 @@ const LocationDataSource = require("../../location/datasource/search_location");
 const locationRepositary = require("../../location/repositary/location_repositary");
 const responser = require("../../../utils/response_wrapper");
 const Advert = require("../model/advert");
-const Logger = require("../../../utils/log_manager")
+const {Logger} = require("../../../utils/log_manager")
 async function saveAdvertRepositary(advert, userid) {
   try {
     
@@ -53,6 +53,8 @@ async function getAdvertsByLatLonRepositary(lat, lon,lastid) {
     let adverts = await AdvertDataSource.getAdvertsByBoundaries(boundaries, 0,lastid);
     return responser(0, adverts);
   } catch (e) {
+    console.log(e)
+
     Logger(e,"An unexpected error has occured while getting adverts by the following last lon and lastid values,",lat,lon,lastid)
     return responser(1, []);
   }

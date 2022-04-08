@@ -11,7 +11,7 @@ async function saveAdvert(advert) {
 function getAdvertsByBoundaries(boundaries, type,lastid) {
   console.log(boundaries);
   console.log(type);
-  let advertQueryObject = lastid==null?{}:{_id:{$lte:lastid}}
+  let advertQueryObject = lastid=="null"?{}:{_id:{$lt:lastid}}
   return Advert.find(advertQueryObject)
     .sort({ _id: -1 })
     .where("loc")
