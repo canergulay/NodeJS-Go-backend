@@ -8,13 +8,15 @@ async function saveAdvert(advert) {
   return await myAdvert.save();
 }
 
-function getAdvertsByBoundaries(boundaries, type) {
+function getAdvertsByBoundaries(boundaries, type,lastid) {
   console.log(boundaries);
   console.log(type);
-  return Advert.find()
-    .sort({ createdAt: -1 })
+  let advertQueryObject = lastid==null?{}:{_id:{$lte:lastid}}
+  return Advert.find(advertQueryObject)
+    .sort({ _id: -1 })
     .where("loc")
     .populate("category")
+    .limit(10)
     .within({
       box: [
         [Number(boundaries[0]), Number(boundaries[2])],
