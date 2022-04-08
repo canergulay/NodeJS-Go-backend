@@ -9,18 +9,16 @@ import (
 
 	"github.com/canergulay/goservices/grpc_manager"
 	"github.com/gorilla/websocket"
-	"gorm.io/gorm"
 )
 
 type SocketServer struct {
-	SP           SocketPool
-	PGConnection *gorm.DB
+	SP SocketPool
 }
 
 var SocketServerCreated SocketServer
 
-func InitializeSocketServer(sp SocketPool, db *gorm.DB) SocketServer {
-	SocketServerCreated = SocketServer{SP: sp, PGConnection: db}
+func InitializeSocketServer(sp SocketPool) SocketServer {
+	SocketServerCreated = SocketServer{SP: sp}
 	return SocketServerCreated
 }
 

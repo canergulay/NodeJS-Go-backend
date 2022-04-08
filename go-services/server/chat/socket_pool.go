@@ -6,7 +6,6 @@ import (
 
 	"github.com/canergulay/goservices/grpc_manager"
 	"github.com/canergulay/goservices/server/persistance"
-	"gorm.io/gorm"
 )
 
 var (
@@ -15,16 +14,15 @@ var (
 
 type SocketPool struct {
 	Clients          map[string]Client
-	PGConnection     *gorm.DB
 	GRPCmanager      grpc_manager.GRPCManager
 	MessagePersister persistance.MessagePersister
 }
 
-func InitializeSocketPool(db *gorm.DB) SocketPool {
+func InitializeSocketPool() SocketPool {
 	clients := make(map[string]Client)
 	grpcManager := grpc_manager.InitgRPCManager()
 	mpersister := persistance.InitializeMessagePersister(&grpcManager)
-	return SocketPool{Clients: clients, PGConnection: db, GRPCmanager: grpcManager, MessagePersister: mpersister}
+	return SocketPool{Clients: clients, GRPCmanager: grpcManager, MessagePersister: mpersister}
 }
 
 func (sp SocketPool) AddClientToPool(client Client) {
