@@ -10,11 +10,14 @@ const FindUserById = async (userid) => {
         email: user.email,
         phone: user.phone,
         picture: user.picture,
+        fcm: user.fcm,
       };
     })
     .catch((e) => {
       return null;
     });
 };
+
+
 
 module.exports = { FindUserById };

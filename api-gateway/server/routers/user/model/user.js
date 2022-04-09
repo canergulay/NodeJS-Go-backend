@@ -26,6 +26,9 @@ const userSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    fcm:{
+      type:String,
+    },
     tokens: [String],
   },
   { timestamps: true }

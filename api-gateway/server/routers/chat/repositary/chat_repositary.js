@@ -42,18 +42,15 @@ const GetMessagesRepositary = (conversationid, lastMessageCreatedAt) => {
 };
 
 const SaveMessageRepositary = (message) => {
-  console.log(message)
   SaveMessage(message)
     .then((saved) => {
       const { conversationId } = message;
       return UpdateConversationLastMessage(conversationId, saved.id);
     })
     .then((conversationUpdated) => {
-      console.log(conversationUpdated);
       return true;
     })
     .catch((e) => {
-      console.log(e);
       return false;
     });
 };
