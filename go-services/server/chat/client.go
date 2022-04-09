@@ -63,17 +63,19 @@ func sayUserHI(conn *websocket.Conn) {
 func (c Client) handleError(err error) {
 	// AN ERROR WHILE READING THE MESSAGE POINTS OUT A CONNECTION LOST STATE.
 	if ce, ok := err.(*websocket.CloseError); ok {
+		fmt.Println(ce, " buradasin !!")
 		switch ce.Code {
 		case websocket.CloseNormalClosure,
 			websocket.CloseGoingAway,
+			websocket.CloseAbnormalClosure,
 			websocket.CloseNoStatusReceived:
-			fmt.Printf("User with the id %s is leaving.", c.Id)
 			c.closeChannelsAndRemoveClient()
 		}
 	}
 }
 
 func (c Client) closeChannelsAndRemoveClient() {
+	fmt.Printf("User with the id %s is leaving.", c.Id)
 	c.SP.RemoveClientFromPool(c.Id)
 	close(c.ReceiveMessage)
 	close(c.SendMessage)

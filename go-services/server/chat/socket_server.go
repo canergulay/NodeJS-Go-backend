@@ -48,6 +48,7 @@ func (s SocketServer) WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err == nil && clientCreated != nil {
 		s.SP.AddClientToPool(*clientCreated)
+
 		go clientCreated.ReceiveMessageHandler(connection)
 		go clientCreated.SendMessageHandler(connection)
 	} else {
