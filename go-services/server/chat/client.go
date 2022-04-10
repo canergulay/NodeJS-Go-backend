@@ -10,6 +10,7 @@ import (
 
 var (
 	CLOSED_CONNECTION = "CLOSECONNECTION"
+	TERMINATE_LOOP    = "TERMINADO"
 )
 
 type Client struct {
@@ -23,7 +24,7 @@ func (c Client) ReceiveMessageHandler(conn *websocket.Conn) {
 	for {
 		msg := <-c.ReceiveMessage
 		messageJSON, err := json.Marshal(msg)
-		if err != nil {
+		if err != nil || msg.Message == TERMINATE_LOOP {
 			log.Println("An error has occured when tried to parse message, ", err, msg)
 			break
 		}
@@ -75,6 +76,7 @@ func (c Client) handleError(err error) {
 func (c Client) closeChannelsAndRemoveClient() {
 	fmt.Printf("User with the id %s is leaving.", c.Id)
 	c.SP.RemoveClientFromPool(c.Id)
+	c.ReceiveMessage <- ChatMessage{Message: TERMINATE_LOOP}
 	close(c.ReceiveMessage)
 	close(c.SendMessage)
 }
