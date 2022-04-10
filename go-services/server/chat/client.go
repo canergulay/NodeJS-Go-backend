@@ -21,15 +21,13 @@ type Client struct {
 
 func (c Client) ReceiveMessageHandler(conn *websocket.Conn) {
 	for {
-		select {
-		case msg := <-c.ReceiveMessage:
-			messageJSON, err := json.Marshal(msg)
-			if err != nil {
-				log.Println("An error has occured when tried to parse message, ", err, msg)
-				break
-			}
-			conn.WriteMessage(1, messageJSON)
+		msg := <-c.ReceiveMessage
+		messageJSON, err := json.Marshal(msg)
+		if err != nil {
+			log.Println("An error has occured when tried to parse message, ", err, msg)
+			break
 		}
+		conn.WriteMessage(1, messageJSON)
 	}
 }
 
@@ -39,8 +37,8 @@ func (c Client) SendMessageHandler(conn *websocket.Conn) {
 		err := conn.ReadJSON(&messageParsed)
 
 		if err != nil {
-			go c.handleError(err)
-			return
+			c.handleError(err)
+			break
 		}
 
 		// WE SHOULD NOTIFY OUR CLIENT THAT WE RECEIVED THE MESSAGE WHICH WILL BE CONVEYED TO RECEIVER.
