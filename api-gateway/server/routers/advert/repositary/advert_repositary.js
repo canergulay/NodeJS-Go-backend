@@ -46,6 +46,7 @@ async function getPointPinnedAndParse(advertToUpdate) {
 async function getAdvertsByLatLonRepositary(lat, lon,lastid,bbox) {
   try {
     let adverts = await AdvertDataSource.getAdvertsByBoundaries(bbox, 0,lastid);
+
     return responser(0, adverts);
   } catch (e) {
     console.log(e)
