@@ -24,6 +24,11 @@ func (c Client) ReceiveMessageHandler(conn *websocket.Conn) {
 	for {
 		msg := <-c.ReceiveMessage
 		messageJSON, err := json.Marshal(msg)
+
+		// IT IS HARD TO SAY HOW CRUCIAL THIS STEP IS.
+		// I HAD FORGOT THIS STEP AND MY CPU WAS BEING FULL IN A FEW MINUTES AFTER I RUN THE PROGRAMME.
+		// THE ISSUE WAS THAT, I WAS CLOSING c.ReceiveMessage CHNANNEL BUT FORGETTING THE TERMINATION OF THE LOOP.
+		// SO, I NEED TO SEND A SIGNAL MESSAGE JUST BEFORE I CLOSE IT SO THAT, THIS INFINITE LOOP INSIDE THIS GOROUTUNE CAN BE TERMINATED.
 		if err != nil || msg.Message == TERMINATE_LOOP {
 			log.Println("An error has occured when tried to parse message, ", err, msg)
 			break
