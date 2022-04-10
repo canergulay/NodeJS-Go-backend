@@ -2,7 +2,8 @@ const loginUserRepositary = require('../repositary/login_user_repositary')
 
 
 async function loginUser(req,res){
-    let mail = req.body.mail
+    console.log(req.body)
+    let mail = req.body.email
     let password = req.body.password
     let phone = req.body.phone
     let response = await loginUserRepositary.loginUser(mail,phone,password)

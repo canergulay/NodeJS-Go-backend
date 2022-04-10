@@ -43,14 +43,9 @@ async function getPointPinnedAndParse(advertToUpdate) {
   }
 }
 
-async function getAdvertsByLatLonRepositary(lat, lon,lastid) {
+async function getAdvertsByLatLonRepositary(lat, lon,lastid,bbox) {
   try {
-    let boundariesResult = await LocationDataSource.getBoundariesByLatLng(
-      lat,
-      lon
-    );
-    let boundaries = boundariesResult.data.boundingbox;
-    let adverts = await AdvertDataSource.getAdvertsByBoundaries(boundaries, 0,lastid);
+    let adverts = await AdvertDataSource.getAdvertsByBoundaries(bbox, 0,lastid);
     return responser(0, adverts);
   } catch (e) {
     console.log(e)

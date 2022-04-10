@@ -18,7 +18,7 @@ var advertDelete = "/advert/delete"
 
 router.post(categories,AuthenticationMiddleVare,getCategoriesAPI.getCategories)
 router.post(advertSave,advertAPI.saveAdvertAPI)
-router.get(advertGet,advertAPI.getAdvertsAPI)
+router.post(advertGet,advertAPI.getAdvertsAPI)
 router.get(advertMyGet,advertAPI.getMyAdvertsAPI)
 router.post(advertDelete,advertAPI.deleteMyAdvertAPI)
 

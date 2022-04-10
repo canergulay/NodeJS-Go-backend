@@ -4,7 +4,7 @@ const endpoints = require('../../../utils/endpoints')
 
  async function searchByQuery(queryTerm) {
     try{
-        let endPoint = endpoints.getEndointWithInput(queryTerm)
+        let endPoint = endpoints.MapBoxForwardGeocodingURL(queryTerm)
         let result = await axios.get(endPoint)
         return result
     }catch(e){

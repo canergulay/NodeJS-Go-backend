@@ -23,4 +23,9 @@ const MapBoxReverseGeocodingURL = (lat,lon) =>{
     return endpoint
 }
 
-module.exports = {getEndointWithInput,getEndointWithInputForCountry,getEndointForBoundriesByGivenLatLng,MapBoxReverseGeocodingURL}
+const MapBoxForwardGeocodingURL = (place)=>{
+    let access_token = process.env.APIKEY
+    return `https://api.mapbox.com/geocoding/v5/mapbox.places/${place}.json?access_token=${access_token}`
+}
+
+module.exports = {getEndointWithInput,getEndointWithInputForCountry,getEndointForBoundriesByGivenLatLng,MapBoxReverseGeocodingURL,MapBoxForwardGeocodingURL}

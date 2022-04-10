@@ -1,27 +1,27 @@
-const locationDataSource = require("../datasource/search_location");
-const responseWrapper = require("../../../utils/response_wrapper");
+const locationDataSource = require("../datasource/search_location")
+const responseWrapper = require("../../../utils/response_wrapper")
 
 async function getParsedLocations(query) {
   try {
-    let results = await locationDataSource.searchByQuery(query);
+    let results = await locationDataSource.searchByQuery(query)
+    if (results.data.features.length == 0) return []
 
-    if (results.data.length == 0) return [];
+    let resultsFiltered = results.data.features.filter(place=>place.bbox)
+    let resultsParsed = resultsFiltered.map((result) => parseResult(result))
+    console.log(resultsParsed)
 
-    let resultsParsed = results.data.map((result) => parseResult(result));
-    console.log(resultsParsed);
-
-    if (resultsParsed[0].firstName.split(", ").length == 1)
-      return responseWrapper(0, [resultsParsed[0]]); // IF IT IS RESPRESENTING A COUNTRY, RETURN DIRECTLY THE FIRST RESULT
-    if (resultsParsed.length == 1) return responseWrapper(0, resultsParsed);
-    return responseWrapper(0, resultsParsed); // IF IT IS NOT A COUNTRY, RETURN ALL THE PARSED RESULTS
+    if (resultsParsed.length>0 && resultsParsed[0].firstName.split(", ").length == 1)
+      return responseWrapper(0, [resultsParsed[0]]) // IF IT IS RESPRESENTING A COUNTRY, RETURN DIRECTLY THE FIRST RESULT
+    if (resultsParsed.length == 1) return responseWrapper(0, resultsParsed)
+    return responseWrapper(0, resultsParsed) // IF IT IS NOT A COUNTRY, RETURN ALL THE PARSED RESULTS
   } catch (e) {
-    return responseWrapper(1, e);
+    return responseWrapper(1, e)
   }
 }
 
 async function getMapBoxResult(lat, lon) {
   try {
-    let result = await locationDataSource.getMapBoxReverseDecode(lat, lon);
+    let result = await locationDataSource.getMapBoxReverseDecode(lat, lon)
     let features = result.data.features
     console.log(features)
     if(features.length > 0) {
@@ -34,50 +34,38 @@ async function getMapBoxResult(lat, lon) {
 }
 
 function parseResult(result) {
-  let id = result.place_id;
-  let type = result.type;
-  let lat = result.lat;
-  let lon = result.lon;
-  let names = parseByDisplayName(type, result.display_name);
+  let {id,place_type} = result
+  let lat = result.center[0]
+  let lon = result.center[1]
+  let names = parseByDisplayName(result)
+  console.log(names)
   return {
     id: id,
-    type: type,
+    type: place_type[0],
     firstName: names.firstName,
     upperName: names.upperName,
     lat: lat,
     lon: lon,
-  };
-}
-
-function parseByDisplayName(type, displayName) {
-  const displayNames = displayName.split(", ");
-
-  if (type != "city") {
-    let firstName = getFirstNameByTwoNames();
-    let upperName = getLastOne();
-    return { firstName, upperName };
-  } else {
-    let firstName = displayNames[0];
-    let upperName = getLastOne();
-    return { firstName, upperName };
-  }
-
-  function getFirstNameByTwoNames() {
-    if (displayNames.length == 1) return displayNames[0];
-    if (displayNames[0] != displayNames[1]) {
-      let firstName = displayNames[0] + ", " + displayNames[1];
-      return firstName;
-    }
-    return displayNames[0];
-  }
-
-  function getLastOne() {
-    if (displayNames.length == 1) return "";
-    if (displayNames[displayNames.length - 1] != displayNames[0]) {
-      return displayNames[displayNames.length - 1];
-    }
-    return "";
+    bbox:result.bbox
   }
 }
 
-module.exports = {getParsedLocations,getMapBoxResult};
+function parseByDisplayName(place) {
+  const displayNames = place.place_name.split(", ")
+  const upperName = displayNames[displayNames.length-1]
+  const firstName = getFirstName(displayNames)
+  return {upperName,firstName}
+}
+
+function getFirstName(displayNames){
+  console.log(displayNames)
+  if(displayNames[0]!==displayNames[1] && displayNames[1]){
+   return `${displayNames[0]}, ${displayNames[1]}`
+  }else{
+     return displayNames[0]
+  }
+}
+
+
+
+module.exports = {getParsedLocations,getMapBoxResult}
