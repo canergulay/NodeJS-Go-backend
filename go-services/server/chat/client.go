@@ -3,7 +3,6 @@ package chat
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/gorilla/websocket"
 )
@@ -33,9 +32,9 @@ func (c Client) ReceiveMessageHandler(conn *websocket.Conn) {
 		// THERE ARE A FEW THINGS IN LIFE THAT CAN MAKE YOU FEEL LIKE THAT.. THE SATISFACTION OF DEBUGGING & HANDLING SOMETHING TROUBLE TO YOU.
 
 		if err != nil || msg.Message == TERMINATE_LOOP {
-			log.Println("An error has occured when tried to parse message, ", err, msg)
 			break
 		}
+
 		conn.WriteMessage(1, messageJSON)
 	}
 }

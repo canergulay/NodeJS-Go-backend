@@ -1,11 +1,15 @@
 const Advert = require("../model/advert");
 const rawMongoDBoperations = require("../../../../config/mongodb/raw_operations");
 const searchLocationsDS = require("../../location/datasource/search_location");
-
+const Deleted = require("../model/deleted")
 async function saveAdvert(advert) {
 
   let myAdvert = new Advert(advert);
   return await myAdvert.save();
+}
+
+const SaveDeletedAdvert = (deleter,target) =>{
+  return new Deleted({deleter,target}).save()
 }
 
 function getAdvertsByBoundaries(boundaries, type,lastid) {
@@ -14,16 +18,17 @@ function getAdvertsByBoundaries(boundaries, type,lastid) {
   let advertQueryObject = lastid=="null"?{}:{_id:{$lt:lastid}}
   return Advert.find(advertQueryObject)
     .sort({ _id: -1 })
-    .where("loc")
     .populate("category")
     .limit(10)
+    .where("loc")
     .within({
       box: [
-        [Number(boundaries[0]), Number(boundaries[2])],
-        [Number(boundaries[1]), Number(boundaries[3])],
+        [Number(boundaries[0])-0.09, Number(boundaries[2])-0.09],
+        [Number(boundaries[1])+0.09, Number(boundaries[3])+0.09],
       ],
     });
 }
+
 
 async function populateAdvertToUpperLocations(advert) {
   try {
@@ -79,5 +84,6 @@ module.exports = {
   populateAdvertToUpperLocations,
   getAdvertsByBoundaries,
   GetAdvertsByUserId,
-  DeleteAdvertById
+  DeleteAdvertById,
+  SaveDeletedAdvert
 };

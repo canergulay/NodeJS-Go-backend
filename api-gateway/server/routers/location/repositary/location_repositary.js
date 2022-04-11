@@ -35,8 +35,8 @@ async function getMapBoxResult(lat, lon) {
 
 function parseResult(result) {
   let {id,place_type} = result
-  let lat = result.center[0]
-  let lon = result.center[1]
+  let lat = result.center[1]
+  let lon = result.center[0]
   let names = parseByDisplayName(result)
   console.log(names)
   return {
