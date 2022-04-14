@@ -3,6 +3,7 @@ const userRouter = require('./routers/user/user_router')
 const advertRouter = require('./routers/advert/advert_router')
 const uplodRouter = require('./routers/image_upload/image_upload_router')
 const chatRouter = require('./routers/chat/chat_router')
+const informationRouter = require('./routers/information/information_router')
 const express = require('express')
 const app = express()
 
@@ -18,6 +19,7 @@ app.use(express.text());
 
 app.use(userRouter)
 app.use(locationRouter)
+app.use(informationRouter)
 app.use(advertRouter)
 app.use(uplodRouter)
 app.use(chatRouter)

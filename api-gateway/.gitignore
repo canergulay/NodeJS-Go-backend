@@ -2,4 +2,6 @@ node_modules
 .env
 assets/
 .json
+terms_of_use.txt
+privacy_policy.txt
 cityspot-284c9-firebase-adminsdk-6l2lh-13f8ac3fd6.json
