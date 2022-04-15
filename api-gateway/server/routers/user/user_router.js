@@ -25,7 +25,7 @@ router.post(registerUser,registerUserAPI.registerUserWithCredentials)
 router.post(sendMail,registerUserAPI.sendVerificationMail)
 router.post(verifyCode,registerUserAPI.verifyCode)
 router.post(loginUser,loginUserAPI.loginUser)
-router.post(userDelete,DeleteUserAPI)
+router.get(userDelete,DeleteUserAPI)
 router.post(userFcmSet,AuthenticationMiddleVare,SetUserNotificationTokenAPI)
 
 
