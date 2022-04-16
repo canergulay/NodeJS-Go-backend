@@ -43,18 +43,12 @@ async function getPointPinnedAndParse(advertToUpdate) {
   }
 }
 
-async function getAdvertsByLatLonRepositary(lat, lon, lastid, bbox) {
+async function getAdvertsByLatLonRepositary(lastid,location) {
   try {
-    let adverts = await AdvertDataSource.getAdvertsByBoundaries(
-      bbox,
-      0,
-      lastid
-    );
-
+    let adverts = await AdvertDataSource.getAdvertsByBoundaries(lastid,location)
     return responser(0, adverts);
   } catch (e) {
     console.log(e);
-
     Logger(
       e,
       "An unexpected error has occured while getting adverts by the following last lon and lastid values,",

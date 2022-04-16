@@ -9,11 +9,10 @@ async function saveAdvertAPI(req,res){
 }
 
  async function getAdvertsAPI(req,res){
-    const {lat,lon} = req.query
-    const {bbox} = req.body
-    console.log(req.query,req.body)
-    let lastid = req.query.lastid
-    let response = await AdvertRepositary.getAdvertsByLatLonRepositary(lat,lon,lastid,bbox)
+    const location = req.body
+    let {lastid} = req.query
+
+    let response = await AdvertRepositary.getAdvertsByLatLonRepositary(lastid,location)
     console.log(response)
    res.send(response)
 }

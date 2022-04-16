@@ -1,34 +1,27 @@
 const Advert = require("../model/advert");
 const rawMongoDBoperations = require("../../../../config/mongodb/raw_operations");
 const searchLocationsDS = require("../../location/datasource/search_location");
-const Deleted = require("../model/deleted")
+const Deleted = require("../model/deleted");
 async function saveAdvert(advert) {
-
   let myAdvert = new Advert(advert);
   return await myAdvert.save();
 }
 
-const SaveDeletedAdvert = (deleter,target) =>{
-  return new Deleted({deleter,target}).save()
-}
+const SaveDeletedAdvert = (deleter, target) => {
+  return new Deleted({ deleter, target }).save();
+};
 
-function getAdvertsByBoundaries(boundaries, type,lastid) {
-  console.log(boundaries);
-  console.log(type);
-  let advertQueryObject = lastid=="null"?{}:{_id:{$lt:lastid}}
+function getAdvertsByBoundaries(lastid, location) {
+  console.log(location,lastid,"here we have them !!");
+  let advertQueryObject =
+    lastid == "null"
+      ? { "loc.id": location.id }
+      : { "loc.id": location.id, _id: { $lt: lastid } };
   return Advert.find(advertQueryObject)
     .sort({ _id: -1 })
     .populate("category")
-    .limit(10)
-    .where("loc")
-    .within({
-      box: [
-        [Number(boundaries[0])-0.09, Number(boundaries[2])-0.09],
-        [Number(boundaries[1])+0.09, Number(boundaries[3])+0.09],
-      ],
-    });
+    .limit(10);
 }
-
 
 async function populateAdvertToUpperLocations(advert) {
   try {
@@ -61,21 +54,27 @@ async function operate(element, advert) {
   );
 }
 
-function GetAdvertsByUserId(userid){
-  const adverts = Advert.find({owner:userid}).populate("category")
-  return adverts
+function GetAdvertsByUserId(userid) {
+  const adverts = Advert.find({ owner: userid }).populate("category");
+  return adverts;
 }
 
-async function DeleteAdvertById(advertid,userid){
-  let advert = await Advert.findById(advertid)
-  if(advert.owner == userid){
-    const advertDeleted = await Advert.findByIdAndDelete(advertid)
-    if(!advertDeleted){
-    throw new Error("unexpectedError",`There is no an advert with the id ${advertid}`)
+async function DeleteAdvertById(advertid, userid) {
+  let advert = await Advert.findById(advertid);
+  if (advert.owner == userid) {
+    const advertDeleted = await Advert.findByIdAndDelete(advertid);
+    if (!advertDeleted) {
+      throw new Error(
+        "unexpectedError",
+        `There is no an advert with the id ${advertid}`
+      );
     }
-    return advertDeleted
-  }else{
-    throw new Error("unexpectedError","The advert owner and given userid didn't match.")
+    return advertDeleted;
+  } else {
+    throw new Error(
+      "unexpectedError",
+      "The advert owner and given userid didn't match."
+    );
   }
 }
 
@@ -85,5 +84,5 @@ module.exports = {
   getAdvertsByBoundaries,
   GetAdvertsByUserId,
   DeleteAdvertById,
-  SaveDeletedAdvert
+  SaveDeletedAdvert,
 };
