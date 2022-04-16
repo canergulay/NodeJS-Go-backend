@@ -38,7 +38,6 @@ function parseResult(result) {
   let lat = result.center[1]
   let lon = result.center[0]
   let names = parseByDisplayName(result)
-  console.log(names)
   return {
     id: id,
     type: place_type[0],

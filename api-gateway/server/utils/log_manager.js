@@ -7,7 +7,7 @@ const logger = winston.createLogger({
   });
 
 
-  const Logger = (errorObject,info) => {
+  const Logger = (errorObject,...info) => {
     logger.log({error:errorObject,extraInfo:info})
   }
 

@@ -9,6 +9,7 @@ async function saveAdvertRepositary(advert, userid) {
     advert.owner = userid;
 
     advert.loc = {
+      id:advert.location.id,
       type: "Point",
       coordinates: [Number(advert.location.lat), Number(advert.location.lon)],
     };

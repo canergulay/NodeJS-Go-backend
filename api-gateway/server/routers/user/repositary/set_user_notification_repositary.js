@@ -1,6 +1,6 @@
 const {SetUserNotificationToken} = require("../datasource/set_notification_token")
 const responser = require("../../../utils/response_wrapper")
-const Logger = require("../../../utils/log_manager")
+const {Logger} = require("../../../utils/log_manager")
 
 const SetUserNotificationTokenRepositary = (userid,token)=>{
     return SetUserNotificationToken(userid,token).then(userSaved=>{

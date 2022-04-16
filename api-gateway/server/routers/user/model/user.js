@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema(
     },
     picture: {
       type: String,
-      default: "avatar.jpg",
+      default: "assets/avatar.jpg",
     },
     phone: {
       type: String,

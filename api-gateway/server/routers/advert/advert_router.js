@@ -1,28 +1,33 @@
 const getCategoriesAPI = require('./api/get_categories_api')
 const advertAPI = require('../advert/api/advert_api')
 const {ComplaintAPI} = require("./api/complaint_api")
+const {DeleteUserAPI} = require("../user/api/delete_user_api")
 const express = require('express')
 const router = express.Router()
 
 ////// - MIDDLEWARES - \\\\\\
 const AuthenticationMiddleVare = require('../../middlewares/authentication_middleware')
 
-router.use(AuthenticationMiddleVare)
+
 
 ////// - CATEGORY ROUTES - \\\\\\
-var categories = '/categories'
-var advertSave = '/advert/save'
-var advertGet = '/advert/get'
-var advertMyGet = '/advert/get/my'
-var advertDelete = "/advert/delete"
-var complaint = "/complain"
+const categories = '/categories'
+const advertSave = '/advert/save'
+const advertGet = '/advert/get'
+const advertMyGet = '/advert/get/my'
+const advertDelete = "/advert/delete"
+const complaint = "/complain"
+
+// THIS ROUTE HAS AUTHENTICATION MIDDLEWARE AND I NEED TO LOCATE USERDELETEAPI HERE FOR SOME REASONS OUT OF CONTEXT \\ 
+
 
 router.post(categories,AuthenticationMiddleVare,getCategoriesAPI.getCategories)
-router.post(advertSave,advertAPI.saveAdvertAPI)
+router.post(advertSave,AuthenticationMiddleVare,advertAPI.saveAdvertAPI)
 router.post(advertGet,advertAPI.getAdvertsAPI)
-router.get(advertMyGet,advertAPI.getMyAdvertsAPI)
-router.post(advertDelete,advertAPI.deleteMyAdvertAPI)
-router.post(complaint,ComplaintAPI)
+router.get(advertMyGet,AuthenticationMiddleVare,advertAPI.getMyAdvertsAPI)
+
+router.post(advertDelete,AuthenticationMiddleVare,advertAPI.deleteMyAdvertAPI)
+router.post(complaint,AuthenticationMiddleVare,ComplaintAPI)
 
 
 

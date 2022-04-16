@@ -1,13 +1,10 @@
 const User = require('../model/user');
 
-async function getUser(mail,phone) {
-    console.log(mail,phone)
-    if(mail==null || mail.length<5){
-        const user =await User.findOne({phone:phone})
-        return user
+async function getUser(email,phone) {
+    if(email==null || email.length<5){
+        return await User.findOne({phone:phone})
     }else {
-        const user =await User.findOne({mail:mail})
-        return user
+        return await User.findOne({email:email})
     }
 }
 
