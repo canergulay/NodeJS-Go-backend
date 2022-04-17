@@ -24,10 +24,6 @@ async function registerUserRepositary(body) {
         let userWithToken = await User(user).generateToken()
         return response(0,userWithToken)
     } catch (e) {
-        console.log(e)
-        if(e.code == 11000){
-            return response(2,e) // CHECK IF USER IS ALREADY REGISTERED
-        }
         return response(1,e) // UNKNOWN ERROR, SHOULD BE LOGGED AND INVESTIGATED LATER ON
     }
 }
