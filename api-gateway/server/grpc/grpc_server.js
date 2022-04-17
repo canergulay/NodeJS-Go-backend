@@ -4,7 +4,7 @@ const grpc = require("@grpc/grpc-js");
 const ValidateToken = require('./services/ValidateToken')
 const SaveMassage = require("./services/SaveMessage")
 
-const protoPath = "../protobufs/authentication.proto";
+const protoPath = "./authentication.proto";
 const port = "8081"
 
 const options = {
