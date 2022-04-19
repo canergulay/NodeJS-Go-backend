@@ -1,3 +1,5 @@
+
+![My Image](diagram.png)
 - A complex backend project that I am building for one of my mobile apps written in Flutter.
 - I will be using MongoDB as main database and Redis for caching and keeping users online status.
 - Indeed I wanted to write everything in Go as a monolith to practise what I learnt at that side, but then I noticed that I need to be a little bit quicker. Node.JS is apparently offers a faster development experience when it comes to build API's.
